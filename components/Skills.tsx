@@ -8,7 +8,14 @@ interface SkillsProps {
 
 export default function Skills({ defaultPosition = { x: 100, y: 100 } }: SkillsProps) {
   return (
-    <Window title="skills.exe" defaultPosition={defaultPosition} variant="dark">
+    <Window 
+      title="skills.exe" 
+      defaultPosition={defaultPosition} 
+      variant="dark"
+      autoSize={true}
+      maxWidth={600}
+      minWidth={400}
+    >
       <div className="space-y-6">
         <h2 className="text-lg font-bold mb-4">Technical Skills</h2>
         <div className="grid grid-cols-1 gap-4 text-xs">

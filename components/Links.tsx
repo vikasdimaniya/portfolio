@@ -8,7 +8,14 @@ interface LinksProps {
 
 const Links: React.FC<LinksProps> = ({ defaultPosition }) => {
   return (
-    <Window title="links.exe" defaultPosition={defaultPosition} variant="dark">
+    <Window 
+      title="links.exe" 
+      defaultPosition={defaultPosition} 
+      variant="dark"
+      autoSize={true}
+      maxWidth={300}
+      minWidth={200}
+    >
       <div className="space-y-4">
         <h2 className="text-lg font-bold mb-4">My Links</h2>
         <div className="space-y-2">
