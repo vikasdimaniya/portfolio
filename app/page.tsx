@@ -33,7 +33,77 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-blue-400 relative">
+      {/* Simple desktop pattern */}
+      <div 
+        className="absolute inset-0 opacity-8"
+        style={{
+          backgroundImage: `
+            radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0)
+          `,
+          backgroundSize: '20px 20px'
+        }}
+      />
+      
+      {/* Centered hero content */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
+        <div className="text-center">
+          {/* Code icon */}
+          <div className="mb-8">
+            <div className="inline-flex items-center justify-center w-20 h-20 text-white text-4xl font-bold">
+              <span className="transform -rotate-12">&lt;</span>
+              <span className="mx-2">/</span>
+              <span className="transform rotate-12">&gt;</span>
+            </div>
+          </div>
+          
+          {/* Main title */}
+          <h1 className="text-6xl font-bold text-white mb-12 tracking-wider">
+            SOFTWARE<br/>ENGINEER
+          </h1>
+          
+          {/* Skill badges */}
+          <div className="flex gap-6 justify-center">
+            <div className="glass-badge">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                  <div className="w-4 h-4 rounded-full bg-white/60"></div>
+                </div>
+                <span className="text-white font-semibold">AI</span>
+              </div>
+            </div>
+            
+            <div className="glass-badge">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 flex items-center justify-center">
+                  <div className="flex gap-1">
+                    <div className="w-1 h-6 bg-white/60 rounded-sm"></div>
+                    <div className="w-1 h-4 bg-white/60 rounded-sm mt-2"></div>
+                    <div className="w-1 h-5 bg-white/60 rounded-sm mt-1"></div>
+                  </div>
+                </div>
+                <div className="text-white font-semibold">
+                  <div>Data</div>
+                  <div className="text-sm opacity-80">Science</div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="glass-badge">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                  <div className="w-4 h-4 rounded-full border-2 border-white/60"></div>
+                </div>
+                <div className="text-white font-semibold">
+                  <div>AI</div>
+                  <div className="text-sm opacity-80">Training</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       <TopMenu onMenuClick={handleMenuClick} />
       
       {openWindows.includes("hero") && (
