@@ -14,6 +14,43 @@ interface WindowProps {
   variant?: "light" | "dark"
 }
 
+interface Position {
+  x: number
+  y: number
+}
+
+interface Size {
+  width: number
+  height: number
+}
+
+interface ResizeState {
+  isResizing: boolean
+  direction: string | null
+  startPos: Position
+  startSize: Size
+  startWindowPos: Position
+}
+
+// Custom hook for window z-index management
+function useWindowZIndex() {
+  const [zIndex, setZIndex] = useState(10)
+
+  const getHighestZIndex = useCallback(() => {
+    return Math.max(
+      ...Array.from(document.querySelectorAll(".window")).map(
+        (el) => Number.parseInt(getComputedStyle(el).zIndex, 10) || 0,
+      ),
+    )
+  }, [])
+
+  const bringToFront = useCallback(() => {
+    setZIndex((prevZIndex) => Math.max(prevZIndex, getHighestZIndex() + 1))
+  }, [getHighestZIndex])
+
+  return { zIndex, bringToFront }
+}
+
 export default function Window({
   title,
   children,
@@ -23,104 +60,132 @@ export default function Window({
   variant = "light",
 }: WindowProps) {
   const [isMinimized, setIsMinimized] = useState(false)
-  const [zIndex, setZIndex] = useState(10)
   const [position, setPosition] = useState(defaultPosition)
   const [size, setSize] = useState({ width: 400, height: 300 })
   const [isDragging, setIsDragging] = useState(false)
-  const [isResizing, setIsResizing] = useState(false)
-  const [resizeDirection, setResizeDirection] = useState<string | null>(null)
-  const nodeRef = useRef<HTMLDivElement>(null)
-  const startPosRef = useRef({ x: 0, y: 0 })
-  const startSizeRef = useRef({ width: 0, height: 0 })
+  const [resizeState, setResizeState] = useState<ResizeState>({
+    isResizing: false,
+    direction: null,
+    startPos: { x: 0, y: 0 },
+    startSize: { width: 0, height: 0 },
+    startWindowPos: { x: 0, y: 0 },
+  })
   const [debugInfo, setDebugInfo] = useState<string>("")
+  
+  const nodeRef = useRef<HTMLDivElement>(null)
+  const dragStartRef = useRef({ x: 0, y: 0 })
 
-  const bringToFront = useCallback(() => {
-    setZIndex((prevZIndex) => Math.max(prevZIndex, getHighestZIndex() + 1))
-  }, [])
+  const { zIndex, bringToFront } = useWindowZIndex()
 
-  const getHighestZIndex = () => {
-    return Math.max(
-      ...Array.from(document.querySelectorAll(".window")).map(
-        (el) => Number.parseInt(getComputedStyle(el).zIndex, 10) || 0,
-      ),
-    )
-  }
-
-  const handleMouseDown = useCallback(
+  // Drag handlers
+  const handleDragMouseDown = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target instanceof HTMLElement && e.target.closest(".window-header")) {
         setIsDragging(true)
         bringToFront()
-        startPosRef.current = { x: e.clientX - position.x, y: e.clientY - position.y }
+        dragStartRef.current = { 
+          x: e.clientX - position.x, 
+          y: e.clientY - position.y 
+        }
       }
     },
     [position.x, position.y, bringToFront],
   )
 
+  // Resize handlers
   const handleResizeMouseDown = useCallback(
     (e: React.MouseEvent<HTMLDivElement>, direction: string) => {
       e.stopPropagation()
-      setIsResizing(true)
-      setResizeDirection(direction)
-      startPosRef.current = { x: e.clientX, y: e.clientY }
-      startSizeRef.current = { width: size.width, height: size.height }
+      setResizeState({
+        isResizing: true,
+        direction,
+        startPos: { x: e.clientX, y: e.clientY },
+        startSize: { width: size.width, height: size.height },
+        startWindowPos: { x: position.x, y: position.y },
+      })
+      bringToFront()
     },
-    [size.width, size.height],
+    [size.width, size.height, position.x, position.y, bringToFront],
   )
 
+  // Mouse move handler
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
       if (isDragging) {
-        const newX = e.clientX - startPosRef.current.x
-        const newY = e.clientY - startPosRef.current.y
+        const newX = e.clientX - dragStartRef.current.x
+        const newY = e.clientY - dragStartRef.current.y
         setPosition({ x: newX, y: newY })
         setDebugInfo(`Dragging - X: ${newX}, Y: ${newY}`)
-      } else if (isResizing) {
-        const deltaX = e.clientX - startPosRef.current.x
-        const deltaY = e.clientY - startPosRef.current.y
+      } else if (resizeState.isResizing && resizeState.direction) {
+        const deltaX = e.clientX - resizeState.startPos.x
+        const deltaY = e.clientY - resizeState.startPos.y
 
-        let newWidth = startSizeRef.current.width
-        let newHeight = startSizeRef.current.height
-        let newX = position.x
-        let newY = position.y
+        let newWidth = resizeState.startSize.width
+        let newHeight = resizeState.startSize.height
+        let newX = resizeState.startWindowPos.x
+        let newY = resizeState.startWindowPos.y
 
-        if (resizeDirection?.includes("right")) {
-          newWidth += deltaX
+        // Handle horizontal resizing
+        if (resizeState.direction.includes("right")) {
+          newWidth = Math.max(resizeState.startSize.width + deltaX, 200)
         }
-        if (resizeDirection?.includes("bottom")) {
-          newHeight += deltaY
-        }
-        if (resizeDirection?.includes("left")) {
-          newWidth -= deltaX
-          newX += deltaX
-        }
-        if (resizeDirection?.includes("top")) {
-          newHeight -= deltaY
-          newY += deltaY
+        if (resizeState.direction.includes("left")) {
+          const proposedWidth = resizeState.startSize.width - deltaX
+          if (proposedWidth >= 200) {
+            newWidth = proposedWidth
+            newX = resizeState.startWindowPos.x + deltaX
+          } else {
+            newWidth = 200
+            newX = resizeState.startWindowPos.x + (resizeState.startSize.width - 200)
+          }
         }
 
-        // Ensure minimum size
-        newWidth = Math.max(newWidth, 200)
-        newHeight = Math.max(newHeight, 100)
+        // Handle vertical resizing
+        if (resizeState.direction.includes("bottom")) {
+          newHeight = Math.max(resizeState.startSize.height + deltaY, 100)
+        }
+        if (resizeState.direction.includes("top")) {
+          const proposedHeight = resizeState.startSize.height - deltaY
+          if (proposedHeight >= 100) {
+            newHeight = proposedHeight
+            newY = resizeState.startWindowPos.y + deltaY
+          } else {
+            newHeight = 100
+            newY = resizeState.startWindowPos.y + (resizeState.startSize.height - 100)
+          }
+        }
 
         setSize({ width: newWidth, height: newHeight })
         setPosition({ x: newX, y: newY })
         setDebugInfo(
-          `Resizing - Direction: ${resizeDirection}, Width: ${newWidth}, Height: ${newHeight}, X: ${newX}, Y: ${newY}`,
+          `Resizing - Direction: ${resizeState.direction}, Width: ${newWidth}, Height: ${newHeight}, X: ${newX}, Y: ${newY}`,
         )
       }
     },
-    [isDragging, isResizing, resizeDirection, position.x, position.y],
+    [isDragging, resizeState],
   )
 
+  // Mouse up handler
   const handleMouseUp = useCallback(() => {
-    setIsDragging(false)
-    setIsResizing(false)
-    setResizeDirection(null)
-  }, [])
+    if (isDragging) {
+      setIsDragging(false)
+      setDebugInfo("")
+    }
+    if (resizeState.isResizing) {
+      setResizeState({
+        isResizing: false,
+        direction: null,
+        startPos: { x: 0, y: 0 },
+        startSize: { width: 0, height: 0 },
+        startWindowPos: { x: 0, y: 0 },
+      })
+      setDebugInfo("")
+    }
+  }, [isDragging, resizeState.isResizing])
 
+  // Global mouse event handlers
   useEffect(() => {
-    if (isDragging || isResizing) {
+    if (isDragging || resizeState.isResizing) {
       window.addEventListener("mousemove", handleMouseMove)
       window.addEventListener("mouseup", handleMouseUp)
     }
@@ -129,7 +194,7 @@ export default function Window({
       window.removeEventListener("mousemove", handleMouseMove)
       window.removeEventListener("mouseup", handleMouseUp)
     }
-  }, [isDragging, isResizing, handleMouseMove, handleMouseUp])
+  }, [isDragging, resizeState.isResizing, handleMouseMove, handleMouseUp])
 
   return (
     <div
@@ -150,7 +215,7 @@ export default function Window({
         imageRendering: "pixelated",
         boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)",
       }}
-      onMouseDown={handleMouseDown}
+      onMouseDown={handleDragMouseDown}
       onClick={bringToFront}
     >
       <div className="window-header h-8 flex items-center justify-between px-2 border-b border-black bg-gray-100 text-black">
@@ -176,41 +241,47 @@ export default function Window({
       >
         {children}
       </div>
+      
       {/* Resize handles */}
       <div
-        className="absolute top-0 left-0 w-2 h-full cursor-ew-resize"
+        className="absolute top-0 left-0 w-2 h-full cursor-ew-resize hover:bg-blue-200 hover:bg-opacity-30 transition-colors"
         onMouseDown={(e) => handleResizeMouseDown(e, "left")}
       />
       <div
-        className="absolute top-0 right-0 w-2 h-full cursor-ew-resize"
+        className="absolute top-0 right-0 w-2 h-full cursor-ew-resize hover:bg-blue-200 hover:bg-opacity-30 transition-colors"
         onMouseDown={(e) => handleResizeMouseDown(e, "right")}
       />
       <div
-        className="absolute bottom-0 left-0 w-full h-2 cursor-ns-resize"
+        className="absolute bottom-0 left-0 w-full h-2 cursor-ns-resize hover:bg-blue-200 hover:bg-opacity-30 transition-colors"
         onMouseDown={(e) => handleResizeMouseDown(e, "bottom")}
       />
       <div
-        className="absolute top-0 left-0 w-full h-2 cursor-ns-resize"
+        className="absolute top-0 left-0 w-full h-2 cursor-ns-resize hover:bg-blue-200 hover:bg-opacity-30 transition-colors"
         onMouseDown={(e) => handleResizeMouseDown(e, "top")}
       />
       <div
-        className="absolute top-0 left-0 w-2 h-2 cursor-nwse-resize"
+        className="absolute top-0 left-0 w-2 h-2 cursor-nwse-resize hover:bg-blue-200 hover:bg-opacity-50 transition-colors"
         onMouseDown={(e) => handleResizeMouseDown(e, "top-left")}
       />
       <div
-        className="absolute top-0 right-0 w-2 h-2 cursor-nesw-resize"
+        className="absolute top-0 right-0 w-2 h-2 cursor-nesw-resize hover:bg-blue-200 hover:bg-opacity-50 transition-colors"
         onMouseDown={(e) => handleResizeMouseDown(e, "top-right")}
       />
       <div
-        className="absolute bottom-0 left-0 w-2 h-2 cursor-nesw-resize"
+        className="absolute bottom-0 left-0 w-2 h-2 cursor-nesw-resize hover:bg-blue-200 hover:bg-opacity-50 transition-colors"
         onMouseDown={(e) => handleResizeMouseDown(e, "bottom-left")}
       />
       <div
-        className="absolute bottom-0 right-0 w-2 h-2 cursor-nwse-resize"
+        className="absolute bottom-0 right-0 w-2 h-2 cursor-nwse-resize hover:bg-blue-200 hover:bg-opacity-50 transition-colors"
         onMouseDown={(e) => handleResizeMouseDown(e, "bottom-right")}
       />
+      
       {/* Debug information */}
-      <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs p-1">{debugInfo}</div>
+      {debugInfo && (
+        <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-75 text-white text-xs p-1 z-50">
+          {debugInfo}
+        </div>
+      )}
     </div>
   )
 }
