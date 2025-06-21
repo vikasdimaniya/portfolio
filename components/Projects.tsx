@@ -188,7 +188,7 @@ export default function Projects({ defaultPosition }: { defaultPosition: { x: nu
               <ul className="list-disc pl-5 space-y-1">
                 <li>Automated data scraping from Hotels.com using Selenium</li>
                 <li>Custom AVL tree-based search engine for fast queries</li>
-                <li>Natural language processing using OpenAI's API</li>
+                <li>Natural language processing using OpenAI&apos;s API</li>
                 <li>Advanced filtering and sorting capabilities</li>
                 <li>Memory-efficient data storage and retrieval</li>
               </ul>

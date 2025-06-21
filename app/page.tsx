@@ -18,10 +18,6 @@ export default function Home() {
     }
   }
 
-  const handleCloseWindow = (section: string) => {
-    setOpenWindows(openWindows.filter(window => window !== section))
-  }
-
   const getWindowPosition = (index: number) => {
     const offset = index * 30
     return { x: 50 + offset, y: 80 + offset }

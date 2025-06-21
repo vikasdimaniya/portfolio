@@ -62,6 +62,7 @@ export default function Window({
   const [isMinimized, setIsMinimized] = useState(false)
   const [position, setPosition] = useState(defaultPosition)
   const [size, setSize] = useState({ width: 400, height: 300 })
+  const [originalSize, setOriginalSize] = useState({ width: 400, height: 300 })
   const [isDragging, setIsDragging] = useState(false)
   const [resizeState, setResizeState] = useState<ResizeState>({
     isResizing: false,
@@ -76,6 +77,20 @@ export default function Window({
   const dragStartRef = useRef({ x: 0, y: 0 })
 
   const { zIndex, bringToFront } = useWindowZIndex()
+
+  // Handle minimize/restore
+  const handleMinimize = useCallback(() => {
+    if (isMinimized) {
+      // Restore window
+      setSize(originalSize)
+      setIsMinimized(false)
+    } else {
+      // Minimize window - store current size and collapse to title bar
+      setOriginalSize(size)
+      setSize({ width: size.width, height: 32 }) // 32px is the title bar height
+      setIsMinimized(true)
+    }
+  }, [isMinimized, size, originalSize])
 
   // Drag handlers
   const handleDragMouseDown = useCallback(
@@ -95,6 +110,9 @@ export default function Window({
   // Resize handlers
   const handleResizeMouseDown = useCallback(
     (e: React.MouseEvent<HTMLDivElement>, direction: string) => {
+      // Don't allow resizing when minimized
+      if (isMinimized) return
+      
       e.stopPropagation()
       setResizeState({
         isResizing: true,
@@ -105,7 +123,7 @@ export default function Window({
       })
       bringToFront()
     },
-    [size.width, size.height, position.x, position.y, bringToFront],
+    [size.width, size.height, position.x, position.y, bringToFront, isMinimized],
   )
 
   // Mouse move handler
@@ -116,7 +134,7 @@ export default function Window({
         const newY = e.clientY - dragStartRef.current.y
         setPosition({ x: newX, y: newY })
         setDebugInfo(`Dragging - X: ${newX}, Y: ${newY}`)
-      } else if (resizeState.isResizing && resizeState.direction) {
+      } else if (resizeState.isResizing && resizeState.direction && !isMinimized) {
         const deltaX = e.clientX - resizeState.startPos.x
         const deltaY = e.clientY - resizeState.startPos.y
 
@@ -157,12 +175,18 @@ export default function Window({
 
         setSize({ width: newWidth, height: newHeight })
         setPosition({ x: newX, y: newY })
+        
+        // Update original size when resizing (so restore works correctly)
+        if (!isMinimized) {
+          setOriginalSize({ width: newWidth, height: newHeight })
+        }
+        
         setDebugInfo(
           `Resizing - Direction: ${resizeState.direction}, Width: ${newWidth}, Height: ${newHeight}, X: ${newX}, Y: ${newY}`,
         )
       }
     },
-    [isDragging, resizeState],
+    [isDragging, resizeState, isMinimized],
   )
 
   // Mouse up handler
@@ -200,7 +224,7 @@ export default function Window({
     <div
       ref={nodeRef}
       className={cn(
-        "window font-sans border border-black",
+        "window font-sans border border-black transition-all duration-200 ease-in-out",
         variant === "dark" ? "bg-black text-white" : "bg-white text-black",
         className,
       )}
@@ -221,7 +245,11 @@ export default function Window({
       <div className="window-header h-8 flex items-center justify-between px-2 border-b border-black bg-gray-100 text-black">
         <span className="text-xs font-sans truncate">/{title}</span>
         <div className="flex gap-2">
-          <button onClick={() => setIsMinimized(!isMinimized)} className="hover:bg-gray-200 p-1 transition-colors">
+          <button 
+            onClick={handleMinimize} 
+            className="hover:bg-gray-200 p-1 transition-colors"
+            title={isMinimized ? "Restore" : "Minimize"}
+          >
             <Minus className="h-3 w-3" />
           </button>
           {onClose && (
@@ -231,53 +259,60 @@ export default function Window({
           )}
         </div>
       </div>
-      <div
-        className={cn(
-          "p-4",
-          variant === "dark" ? "bg-black text-white" : "bg-white text-black",
-          isMinimized ? "hidden" : "",
-        )}
-        style={{ height: "calc(100% - 2rem)", overflow: "auto" }}
-      >
-        {children}
-      </div>
       
-      {/* Resize handles */}
-      <div
-        className="absolute top-0 left-0 w-2 h-full cursor-ew-resize hover:bg-blue-200 hover:bg-opacity-30 transition-colors"
-        onMouseDown={(e) => handleResizeMouseDown(e, "left")}
-      />
-      <div
-        className="absolute top-0 right-0 w-2 h-full cursor-ew-resize hover:bg-blue-200 hover:bg-opacity-30 transition-colors"
-        onMouseDown={(e) => handleResizeMouseDown(e, "right")}
-      />
-      <div
-        className="absolute bottom-0 left-0 w-full h-2 cursor-ns-resize hover:bg-blue-200 hover:bg-opacity-30 transition-colors"
-        onMouseDown={(e) => handleResizeMouseDown(e, "bottom")}
-      />
-      <div
-        className="absolute top-0 left-0 w-full h-2 cursor-ns-resize hover:bg-blue-200 hover:bg-opacity-30 transition-colors"
-        onMouseDown={(e) => handleResizeMouseDown(e, "top")}
-      />
-      <div
-        className="absolute top-0 left-0 w-2 h-2 cursor-nwse-resize hover:bg-blue-200 hover:bg-opacity-50 transition-colors"
-        onMouseDown={(e) => handleResizeMouseDown(e, "top-left")}
-      />
-      <div
-        className="absolute top-0 right-0 w-2 h-2 cursor-nesw-resize hover:bg-blue-200 hover:bg-opacity-50 transition-colors"
-        onMouseDown={(e) => handleResizeMouseDown(e, "top-right")}
-      />
-      <div
-        className="absolute bottom-0 left-0 w-2 h-2 cursor-nesw-resize hover:bg-blue-200 hover:bg-opacity-50 transition-colors"
-        onMouseDown={(e) => handleResizeMouseDown(e, "bottom-left")}
-      />
-      <div
-        className="absolute bottom-0 right-0 w-2 h-2 cursor-nwse-resize hover:bg-blue-200 hover:bg-opacity-50 transition-colors"
-        onMouseDown={(e) => handleResizeMouseDown(e, "bottom-right")}
-      />
+      {/* Content area - only show when not minimized */}
+      {!isMinimized && (
+        <div
+          className={cn(
+            "p-4",
+            variant === "dark" ? "bg-black text-white" : "bg-white text-black",
+          )}
+          style={{ height: "calc(100% - 2rem)", overflow: "auto" }}
+        >
+          {children}
+        </div>
+      )}
+      
+      {/* Resize handles - only show when not minimized */}
+      {!isMinimized && (
+        <>
+          <div
+            className="absolute top-0 left-0 w-2 h-full cursor-ew-resize hover:bg-blue-200 hover:bg-opacity-30 transition-colors"
+            onMouseDown={(e) => handleResizeMouseDown(e, "left")}
+          />
+          <div
+            className="absolute top-0 right-0 w-2 h-full cursor-ew-resize hover:bg-blue-200 hover:bg-opacity-30 transition-colors"
+            onMouseDown={(e) => handleResizeMouseDown(e, "right")}
+          />
+          <div
+            className="absolute bottom-0 left-0 w-full h-2 cursor-ns-resize hover:bg-blue-200 hover:bg-opacity-30 transition-colors"
+            onMouseDown={(e) => handleResizeMouseDown(e, "bottom")}
+          />
+          <div
+            className="absolute top-0 left-0 w-full h-2 cursor-ns-resize hover:bg-blue-200 hover:bg-opacity-30 transition-colors"
+            onMouseDown={(e) => handleResizeMouseDown(e, "top")}
+          />
+          <div
+            className="absolute top-0 left-0 w-2 h-2 cursor-nwse-resize hover:bg-blue-200 hover:bg-opacity-50 transition-colors"
+            onMouseDown={(e) => handleResizeMouseDown(e, "top-left")}
+          />
+          <div
+            className="absolute top-0 right-0 w-2 h-2 cursor-nesw-resize hover:bg-blue-200 hover:bg-opacity-50 transition-colors"
+            onMouseDown={(e) => handleResizeMouseDown(e, "top-right")}
+          />
+          <div
+            className="absolute bottom-0 left-0 w-2 h-2 cursor-nesw-resize hover:bg-blue-200 hover:bg-opacity-50 transition-colors"
+            onMouseDown={(e) => handleResizeMouseDown(e, "bottom-left")}
+          />
+          <div
+            className="absolute bottom-0 right-0 w-2 h-2 cursor-nwse-resize hover:bg-blue-200 hover:bg-opacity-50 transition-colors"
+            onMouseDown={(e) => handleResizeMouseDown(e, "bottom-right")}
+          />
+        </>
+      )}
       
       {/* Debug information */}
-      {debugInfo && (
+      {debugInfo && !isMinimized && (
         <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-75 text-white text-xs p-1 z-50">
           {debugInfo}
         </div>

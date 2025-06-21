@@ -125,7 +125,7 @@ export default function Experience({ defaultPosition }: { defaultPosition: { x: 
               </li>
               <li>Built a video analytics platform using ClickHouse to track and extract insights from video data.</li>
               <li>
-                Integrated open-source AI models to improve media accessibility, including OpenAI's Whisper for audio
+                Integrated open-source AI models to improve media accessibility, including OpenAI&apos;s Whisper for audio
                 transcription.
               </li>
               <li>
