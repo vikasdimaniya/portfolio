@@ -9,7 +9,7 @@ const Hero = forwardRef<WindowRef>((props, ref) => {
     <Window 
       ref={ref}
       title="vikas.exe" 
-      defaultPosition={{ x: 20, y: 20 }} 
+      defaultPosition={{ x: 50, y: 50 }} 
       autoSize={true}
       maxWidth={500}
       minWidth={300}
