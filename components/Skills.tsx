@@ -1,46 +1,86 @@
 "use client"
 
-import Window from "./Window"
+import { forwardRef } from "react"
+import Window, { WindowRef } from "./Window"
 
-interface SkillsProps {
-  defaultPosition?: { x: number; y: number }
-}
+const Skills = forwardRef<WindowRef, { defaultPosition: { x: number; y: number } }>(
+  ({ defaultPosition }, ref) => {
+    return (
+      <Window ref={ref} title="skills.exe" defaultPosition={defaultPosition} variant="light">
+        <div className="space-y-6">
+          <div className="grid gap-4">
+            <div className="space-y-2">
+              <h3 className="text-sm font-bold">Programming Languages</h3>
+              <div className="flex flex-wrap gap-2">
+                {["Python", "JavaScript", "TypeScript", "C++", "Java", "Go"].map((skill) => (
+                  <span key={skill} className="bg-blue-100 text-blue-800 px-2 py-1 text-xs border">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
 
-export default function Skills({ defaultPosition = { x: 100, y: 100 } }: SkillsProps) {
-  return (
-    <Window 
-      title="skills.exe" 
-      defaultPosition={defaultPosition} 
-      variant="dark"
-      autoSize={true}
-      maxWidth={600}
-      minWidth={400}
-    >
-      <div className="space-y-6">
-        <h2 className="text-lg font-bold mb-4">Technical Skills</h2>
-        <div className="grid grid-cols-1 gap-4 text-xs">
-          <div>
-            <h3 className="font-semibold text-blue-400">Languages:</h3>
-            <p className="text-gray-300">Javascript (Node.js, React, Next), Python, Java, C++, Go, HTML, CSS</p>
-          </div>
-          <div>
-            <h3 className="font-semibold text-blue-400">Frameworks:</h3>
-            <p className="text-gray-300">Express, Fastify, JEST, Django, Flask</p>
-          </div>
-          <div>
-            <h3 className="font-semibold text-blue-400">Databases:</h3>
-            <p className="text-gray-300">NoSQL (MongoDB, Redis), SQL (ClickHouse, MSSQL, SQLite)</p>
-          </div>
-          <div>
-            <h3 className="font-semibold text-blue-400">Developer Tools:</h3>
-            <p className="text-gray-300">NPM, AWS, Docker, Kubernetes, JIRA, Postman, Stripe, CDNs, Sentry, GIT, Linux, vs-code</p>
-          </div>
-          <div>
-            <h3 className="font-semibold text-blue-400">Libraries:</h3>
-            <p className="text-gray-300">passport.js, socket.io, FFMPG, shaka player, hls player, Selenium, pytorch</p>
+            <div className="space-y-2">
+              <h3 className="text-sm font-bold">Web Technologies</h3>
+              <div className="flex flex-wrap gap-2">
+                {["React", "Next.js", "Node.js", "Express", "FastAPI", "HTML/CSS"].map((skill) => (
+                  <span key={skill} className="bg-green-100 text-green-800 px-2 py-1 text-xs border">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-sm font-bold">Databases</h3>
+              <div className="flex flex-wrap gap-2">
+                {["MongoDB", "PostgreSQL", "Redis", "ClickHouse", "SQLite"].map((skill) => (
+                  <span key={skill} className="bg-purple-100 text-purple-800 px-2 py-1 text-xs border">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-sm font-bold">Cloud & DevOps</h3>
+              <div className="flex flex-wrap gap-2">
+                {["AWS", "Docker", "Kubernetes", "CI/CD", "Linux", "Git"].map((skill) => (
+                  <span key={skill} className="bg-orange-100 text-orange-800 px-2 py-1 text-xs border">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-sm font-bold">AI & Machine Learning</h3>
+              <div className="flex flex-wrap gap-2">
+                {["OpenAI API", "TensorFlow", "Computer Vision", "NLP", "YOLO", "Whisper"].map((skill) => (
+                  <span key={skill} className="bg-red-100 text-red-800 px-2 py-1 text-xs border">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-sm font-bold">Tools & Frameworks</h3>
+              <div className="flex flex-wrap gap-2">
+                {["Selenium", "FFmpeg", "Electron", "Stripe", "OAuth2.0", "REST APIs"].map((skill) => (
+                  <span key={skill} className="bg-gray-100 text-gray-800 px-2 py-1 text-xs border">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </Window>
-  )
-}
+      </Window>
+    )
+  }
+)
+
+Skills.displayName = "Skills"
+
+export default Skills

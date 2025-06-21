@@ -1,11 +1,13 @@
 "use client"
 
-import Window from "./Window"
+import { forwardRef } from "react"
+import Window, { WindowRef } from "./Window"
 import { FaEnvelope, FaLinkedin, FaGithub } from "react-icons/fa"
 
-export default function Hero() {
+const Hero = forwardRef<WindowRef>((props, ref) => {
   return (
     <Window 
+      ref={ref}
       title="vikas.exe" 
       defaultPosition={{ x: 20, y: 20 }} 
       autoSize={true}
@@ -39,4 +41,8 @@ export default function Hero() {
       </div>
     </Window>
   )
-}
+})
+
+Hero.displayName = "Hero"
+
+export default Hero

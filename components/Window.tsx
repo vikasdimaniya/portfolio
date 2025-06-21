@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useRef, useEffect, useCallback } from "react"
+import { useState, useRef, useEffect, useCallback, forwardRef, useImperativeHandle } from "react"
 import { cn } from "@/lib/utils"
 import { useWindowDrag } from "./hooks/useWindowDrag"
 import { useWindowResize } from "./hooks/useWindowResize"
@@ -23,6 +23,10 @@ interface WindowProps {
   minHeight?: number
 }
 
+export interface WindowRef {
+  bringToFront: () => void
+}
+
 const TITLE_BAR_HEIGHT = 32
 const DEFAULT_PADDING = 32 // 16px padding on each side
 const DEFAULT_MAX_WIDTH = 800
@@ -30,7 +34,7 @@ const DEFAULT_MAX_HEIGHT = 600
 const DEFAULT_MIN_WIDTH = 300
 const DEFAULT_MIN_HEIGHT = 200
 
-export default function Window({
+const Window = forwardRef<WindowRef, WindowProps>(({
   title,
   children,
   className = "",
@@ -42,7 +46,7 @@ export default function Window({
   maxHeight = DEFAULT_MAX_HEIGHT,
   minWidth = DEFAULT_MIN_WIDTH,
   minHeight = DEFAULT_MIN_HEIGHT,
-}: WindowProps) {
+}, ref) => {
   const [isMinimized, setIsMinimized] = useState(false)
   const [originalSize, setOriginalSize] = useState({ width: 400, height: 300 })
   const [hasAutoSized, setHasAutoSized] = useState(false)
@@ -55,6 +59,11 @@ export default function Window({
   const { zIndex, bringToFront } = useWindowZIndex(10)
   const drag = useWindowDrag(defaultPosition, bringToFront)
   const resize = useWindowResize({ width: 400, height: 300 }, defaultPosition)
+
+  // Expose bringToFront method through ref
+  useImperativeHandle(ref, () => ({
+    bringToFront
+  }), [bringToFront])
 
   // Auto-size the window to fit content
   const autoSizeWindow = useCallback(() => {
@@ -250,4 +259,8 @@ export default function Window({
       )}
     </div>
   )
-}
+})
+
+Window.displayName = "Window"
+
+export default Window
