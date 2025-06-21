@@ -2,8 +2,12 @@
 
 import type React from "react"
 import { useState, useRef, useEffect, useCallback } from "react"
-import { Minus, X } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useWindowDrag } from "./hooks/useWindowDrag"
+import { useWindowResize } from "./hooks/useWindowResize"
+import { useWindowZIndex } from "./hooks/useWindowZIndex"
+import WindowHeader from "./WindowHeader"
+import ResizeHandles from "./ResizeHandles"
 
 interface WindowProps {
   title: string
@@ -14,42 +18,7 @@ interface WindowProps {
   variant?: "light" | "dark"
 }
 
-interface Position {
-  x: number
-  y: number
-}
-
-interface Size {
-  width: number
-  height: number
-}
-
-interface ResizeState {
-  isResizing: boolean
-  direction: string | null
-  startPos: Position
-  startSize: Size
-  startWindowPos: Position
-}
-
-// Custom hook for window z-index management
-function useWindowZIndex() {
-  const [zIndex, setZIndex] = useState(10)
-
-  const getHighestZIndex = useCallback(() => {
-    return Math.max(
-      ...Array.from(document.querySelectorAll(".window")).map(
-        (el) => Number.parseInt(getComputedStyle(el).zIndex, 10) || 0,
-      ),
-    )
-  }, [])
-
-  const bringToFront = useCallback(() => {
-    setZIndex((prevZIndex) => Math.max(prevZIndex, getHighestZIndex() + 1))
-  }, [getHighestZIndex])
-
-  return { zIndex, bringToFront }
-}
+const TITLE_BAR_HEIGHT = 32
 
 export default function Window({
   title,
@@ -60,214 +29,112 @@ export default function Window({
   variant = "light",
 }: WindowProps) {
   const [isMinimized, setIsMinimized] = useState(false)
-  const [position, setPosition] = useState(defaultPosition)
-  const [size, setSize] = useState({ width: 400, height: 300 })
   const [originalSize, setOriginalSize] = useState({ width: 400, height: 300 })
-  const [isDragging, setIsDragging] = useState(false)
-  const [resizeState, setResizeState] = useState<ResizeState>({
-    isResizing: false,
-    direction: null,
-    startPos: { x: 0, y: 0 },
-    startSize: { width: 0, height: 0 },
-    startWindowPos: { x: 0, y: 0 },
-  })
-  const [debugInfo, setDebugInfo] = useState<string>("")
-  
   const nodeRef = useRef<HTMLDivElement>(null)
-  const dragStartRef = useRef({ x: 0, y: 0 })
+  const lastDragPositionRef = useRef(defaultPosition)
 
   const { zIndex, bringToFront } = useWindowZIndex()
+  const drag = useWindowDrag(defaultPosition, bringToFront)
+  const resize = useWindowResize({ width: 400, height: 300 }, defaultPosition)
 
   // Handle minimize/restore
   const handleMinimize = useCallback(() => {
     if (isMinimized) {
       // Restore window
-      setSize(originalSize)
+      resize.setSize(originalSize)
       setIsMinimized(false)
     } else {
       // Minimize window - store current size and collapse to title bar
-      setOriginalSize(size)
-      setSize({ width: size.width, height: 32 }) // 32px is the title bar height
+      setOriginalSize(resize.size)
+      resize.setSize({ width: resize.size.width, height: TITLE_BAR_HEIGHT })
       setIsMinimized(true)
     }
-  }, [isMinimized, size, originalSize])
+  }, [isMinimized, resize.size, originalSize, resize])
 
-  // Drag handlers
-  const handleDragMouseDown = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      if (e.target instanceof HTMLElement && e.target.closest(".window-header")) {
-        setIsDragging(true)
-        bringToFront()
-        dragStartRef.current = { 
-          x: e.clientX - position.x, 
-          y: e.clientY - position.y 
-        }
-      }
-    },
-    [position.x, position.y, bringToFront],
-  )
-
-  // Resize handlers
-  const handleResizeMouseDown = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>, direction: string) => {
-      // Don't allow resizing when minimized
-      if (isMinimized) return
-      
-      e.stopPropagation()
-      setResizeState({
-        isResizing: true,
-        direction,
-        startPos: { x: e.clientX, y: e.clientY },
-        startSize: { width: size.width, height: size.height },
-        startWindowPos: { x: position.x, y: position.y },
-      })
-      bringToFront()
-    },
-    [size.width, size.height, position.x, position.y, bringToFront, isMinimized],
-  )
-
-  // Mouse move handler
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
-      if (isDragging) {
-        const newX = e.clientX - dragStartRef.current.x
-        const newY = e.clientY - dragStartRef.current.y
-        setPosition({ x: newX, y: newY })
-        setDebugInfo(`Dragging - X: ${newX}, Y: ${newY}`)
-      } else if (resizeState.isResizing && resizeState.direction && !isMinimized) {
-        const deltaX = e.clientX - resizeState.startPos.x
-        const deltaY = e.clientY - resizeState.startPos.y
-
-        let newWidth = resizeState.startSize.width
-        let newHeight = resizeState.startSize.height
-        let newX = resizeState.startWindowPos.x
-        let newY = resizeState.startWindowPos.y
-
-        // Handle horizontal resizing
-        if (resizeState.direction.includes("right")) {
-          newWidth = Math.max(resizeState.startSize.width + deltaX, 200)
-        }
-        if (resizeState.direction.includes("left")) {
-          const proposedWidth = resizeState.startSize.width - deltaX
-          if (proposedWidth >= 200) {
-            newWidth = proposedWidth
-            newX = resizeState.startWindowPos.x + deltaX
-          } else {
-            newWidth = 200
-            newX = resizeState.startWindowPos.x + (resizeState.startSize.width - 200)
-          }
-        }
-
-        // Handle vertical resizing
-        if (resizeState.direction.includes("bottom")) {
-          newHeight = Math.max(resizeState.startSize.height + deltaY, 100)
-        }
-        if (resizeState.direction.includes("top")) {
-          const proposedHeight = resizeState.startSize.height - deltaY
-          if (proposedHeight >= 100) {
-            newHeight = proposedHeight
-            newY = resizeState.startWindowPos.y + deltaY
-          } else {
-            newHeight = 100
-            newY = resizeState.startWindowPos.y + (resizeState.startSize.height - 100)
-          }
-        }
-
-        setSize({ width: newWidth, height: newHeight })
-        setPosition({ x: newX, y: newY })
-        
-        // Update original size when resizing (so restore works correctly)
-        if (!isMinimized) {
-          setOriginalSize({ width: newWidth, height: newHeight })
-        }
-        
-        setDebugInfo(
-          `Resizing - Direction: ${resizeState.direction}, Width: ${newWidth}, Height: ${newHeight}, X: ${newX}, Y: ${newY}`,
-        )
-      }
-    },
-    [isDragging, resizeState, isMinimized],
-  )
-
-  // Mouse up handler
-  const handleMouseUp = useCallback(() => {
-    if (isDragging) {
-      setIsDragging(false)
-      setDebugInfo("")
+  // Update resize position when drag position changes (but only when not resizing)
+  useEffect(() => {
+    if (!resize.isResizing && 
+        (drag.position.x !== lastDragPositionRef.current.x || 
+         drag.position.y !== lastDragPositionRef.current.y)) {
+      resize.setPosition(drag.position)
+      lastDragPositionRef.current = drag.position
     }
-    if (resizeState.isResizing) {
-      setResizeState({
-        isResizing: false,
-        direction: null,
-        startPos: { x: 0, y: 0 },
-        startSize: { width: 0, height: 0 },
-        startWindowPos: { x: 0, y: 0 },
-      })
-      setDebugInfo("")
+  }, [drag.position, resize.isResizing, resize])
+
+  // Update original size when resizing (for proper restore)
+  useEffect(() => {
+    if (resize.isResizing && !isMinimized) {
+      setOriginalSize(resize.size)
     }
-  }, [isDragging, resizeState.isResizing])
+  }, [resize.size, resize.isResizing, isMinimized])
 
   // Global mouse event handlers
   useEffect(() => {
-    if (isDragging || resizeState.isResizing) {
-      window.addEventListener("mousemove", handleMouseMove)
-      window.addEventListener("mouseup", handleMouseUp)
+    const handleMouseMove = (e: MouseEvent) => {
+      drag.handleMouseMove(e)
+      resize.handleMouseMove(e)
+    }
+
+    const handleMouseUp = () => {
+      drag.handleMouseUp()
+      resize.handleMouseUp()
+    }
+
+    if (drag.isDragging || resize.isResizing) {
+      document.addEventListener("mousemove", handleMouseMove, { passive: false })
+      document.addEventListener("mouseup", handleMouseUp)
     }
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove)
-      window.removeEventListener("mouseup", handleMouseUp)
+      document.removeEventListener("mousemove", handleMouseMove)
+      document.removeEventListener("mouseup", handleMouseUp)
     }
-  }, [isDragging, resizeState.isResizing, handleMouseMove, handleMouseUp])
+  }, [drag.isDragging, resize.isResizing, drag.handleMouseMove, drag.handleMouseUp, resize.handleMouseMove, resize.handleMouseUp])
+
+  // Use drag position when dragging, resize position when resizing
+  const currentPosition = resize.isResizing ? resize.position : drag.position
+  const currentSize = resize.size
 
   return (
     <div
       ref={nodeRef}
       className={cn(
-        "window font-sans border border-black transition-all duration-200 ease-in-out",
+        "window font-sans border border-black transition-all duration-200 ease-out select-none",
         variant === "dark" ? "bg-black text-white" : "bg-white text-black",
         className,
       )}
       style={{
         position: "fixed",
         zIndex,
-        left: `${position.x}px`,
-        top: `${position.y}px`,
-        width: `${size.width}px`,
-        height: `${size.height}px`,
-        cursor: isDragging ? "grabbing" : "default",
+        left: `${currentPosition.x}px`,
+        top: `${currentPosition.y}px`,
+        width: `${currentSize.width}px`,
+        height: `${currentSize.height}px`,
+        cursor: drag.isDragging ? "grabbing" : "default",
         imageRendering: "pixelated",
         boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)",
       }}
-      onMouseDown={handleDragMouseDown}
+      onMouseDown={drag.handleMouseDown}
       onClick={bringToFront}
     >
-      <div className="window-header h-8 flex items-center justify-between px-2 border-b border-black bg-gray-100 text-black">
-        <span className="text-xs font-sans truncate">/{title}</span>
-        <div className="flex gap-2">
-          <button 
-            onClick={handleMinimize} 
-            className="hover:bg-gray-200 p-1 transition-colors"
-            title={isMinimized ? "Restore" : "Minimize"}
-          >
-            <Minus className="h-3 w-3" />
-          </button>
-          {onClose && (
-            <button onClick={onClose} className="hover:bg-gray-200 p-1 transition-colors">
-              <X className="h-3 w-3" />
-            </button>
-          )}
-        </div>
-      </div>
+      <WindowHeader
+        title={title}
+        isMinimized={isMinimized}
+        onMinimize={handleMinimize}
+        onClose={onClose}
+      />
       
       {/* Content area - only show when not minimized */}
       {!isMinimized && (
         <div
           className={cn(
-            "p-4",
+            "p-4 select-text",
             variant === "dark" ? "bg-black text-white" : "bg-white text-black",
           )}
-          style={{ height: "calc(100% - 2rem)", overflow: "auto" }}
+          style={{ 
+            height: `calc(100% - ${TITLE_BAR_HEIGHT}px)`, 
+            overflow: "auto" 
+          }}
         >
           {children}
         </div>
@@ -275,47 +142,7 @@ export default function Window({
       
       {/* Resize handles - only show when not minimized */}
       {!isMinimized && (
-        <>
-          <div
-            className="absolute top-0 left-0 w-2 h-full cursor-ew-resize hover:bg-blue-200 hover:bg-opacity-30 transition-colors"
-            onMouseDown={(e) => handleResizeMouseDown(e, "left")}
-          />
-          <div
-            className="absolute top-0 right-0 w-2 h-full cursor-ew-resize hover:bg-blue-200 hover:bg-opacity-30 transition-colors"
-            onMouseDown={(e) => handleResizeMouseDown(e, "right")}
-          />
-          <div
-            className="absolute bottom-0 left-0 w-full h-2 cursor-ns-resize hover:bg-blue-200 hover:bg-opacity-30 transition-colors"
-            onMouseDown={(e) => handleResizeMouseDown(e, "bottom")}
-          />
-          <div
-            className="absolute top-0 left-0 w-full h-2 cursor-ns-resize hover:bg-blue-200 hover:bg-opacity-30 transition-colors"
-            onMouseDown={(e) => handleResizeMouseDown(e, "top")}
-          />
-          <div
-            className="absolute top-0 left-0 w-2 h-2 cursor-nwse-resize hover:bg-blue-200 hover:bg-opacity-50 transition-colors"
-            onMouseDown={(e) => handleResizeMouseDown(e, "top-left")}
-          />
-          <div
-            className="absolute top-0 right-0 w-2 h-2 cursor-nesw-resize hover:bg-blue-200 hover:bg-opacity-50 transition-colors"
-            onMouseDown={(e) => handleResizeMouseDown(e, "top-right")}
-          />
-          <div
-            className="absolute bottom-0 left-0 w-2 h-2 cursor-nesw-resize hover:bg-blue-200 hover:bg-opacity-50 transition-colors"
-            onMouseDown={(e) => handleResizeMouseDown(e, "bottom-left")}
-          />
-          <div
-            className="absolute bottom-0 right-0 w-2 h-2 cursor-nwse-resize hover:bg-blue-200 hover:bg-opacity-50 transition-colors"
-            onMouseDown={(e) => handleResizeMouseDown(e, "bottom-right")}
-          />
-        </>
-      )}
-      
-      {/* Debug information */}
-      {debugInfo && !isMinimized && (
-        <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-75 text-white text-xs p-1 z-50">
-          {debugInfo}
-        </div>
+        <ResizeHandles onResizeMouseDown={resize.handleResizeMouseDown} />
       )}
     </div>
   )
