@@ -138,4 +138,35 @@
     transform: translate(2px, 2px);
     box-shadow: none;
   }
+
+  /* Window-specific styles to prevent overflow and flickering */
+  .window {
+    contain: layout style paint;
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+
+  .window * {
+    box-sizing: border-box;
+  }
+
+  .window .select-text {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+  }
+
+  .window .select-text * {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .window .select-text img,
+  .window .select-text video,
+  .window .select-text iframe {
+    max-width: 100%;
+    height: auto;
+  }
 }

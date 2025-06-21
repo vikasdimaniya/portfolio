@@ -46,11 +46,13 @@ export default function Window({
   const [isMinimized, setIsMinimized] = useState(false)
   const [originalSize, setOriginalSize] = useState({ width: 400, height: 300 })
   const [hasAutoSized, setHasAutoSized] = useState(false)
+  const [isInitialized, setIsInitialized] = useState(false)
   const nodeRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const lastDragPositionRef = useRef(defaultPosition)
+  const initializationTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
 
-  const { zIndex, bringToFront } = useWindowZIndex()
+  const { zIndex, bringToFront } = useWindowZIndex(10)
   const drag = useWindowDrag(defaultPosition, bringToFront)
   const resize = useWindowResize({ width: 400, height: 300 }, defaultPosition)
 
@@ -58,47 +60,43 @@ export default function Window({
   const autoSizeWindow = useCallback(() => {
     if (!autoSize || !contentRef.current || hasAutoSized || isMinimized) return
 
-    // Create a temporary element to measure content
-    const tempDiv = document.createElement('div')
-    tempDiv.style.position = 'absolute'
-    tempDiv.style.visibility = 'hidden'
-    tempDiv.style.pointerEvents = 'none'
-    tempDiv.style.width = 'auto'
-    tempDiv.style.height = 'auto'
-    tempDiv.style.padding = '16px' // Match the content padding
-    tempDiv.style.fontFamily = getComputedStyle(contentRef.current).fontFamily
-    tempDiv.style.fontSize = getComputedStyle(contentRef.current).fontSize
-    tempDiv.style.lineHeight = getComputedStyle(contentRef.current).lineHeight
-    
-    // Clone the content
-    tempDiv.innerHTML = contentRef.current.innerHTML
-    document.body.appendChild(tempDiv)
-
-    // Get the natural dimensions
-    const contentWidth = tempDiv.scrollWidth
-    const contentHeight = tempDiv.scrollHeight
-
-    // Clean up
-    document.body.removeChild(tempDiv)
-
-    // Calculate window dimensions
-    const windowWidth = Math.min(Math.max(contentWidth, minWidth), maxWidth)
-    const windowHeight = Math.min(Math.max(contentHeight + TITLE_BAR_HEIGHT, minHeight), maxHeight)
-
-    // Update size
-    resize.setSize({ width: windowWidth, height: windowHeight })
-    setOriginalSize({ width: windowWidth, height: windowHeight })
-    setHasAutoSized(true)
-  }, [autoSize, hasAutoSized, isMinimized, maxWidth, maxHeight, minWidth, minHeight, resize])
-
-  // Auto-size when content changes or component mounts
-  useEffect(() => {
-    if (autoSize && !hasAutoSized && !isMinimized) {
-      // Use a small delay to ensure content is rendered
-      const timer = setTimeout(autoSizeWindow, 100)
-      return () => clearTimeout(timer)
+    try {
+      // Get viewport dimensions for constraints
+      const viewportWidth = window.innerWidth
+      const viewportHeight = window.innerHeight
+      
+      // Temporarily set content to auto sizing to measure
+      const originalOverflow = contentRef.current.style.overflow
+      contentRef.current.style.overflow = 'visible'
+      
+      // Measure the actual content
+      const scrollWidth = contentRef.current.scrollWidth
+      const scrollHeight = contentRef.current.scrollHeight
+      
+      // Calculate required dimensions with padding
+      const requiredWidth = Math.max(scrollWidth + DEFAULT_PADDING, minWidth)
+      const requiredHeight = Math.max(scrollHeight + TITLE_BAR_HEIGHT + 16, minHeight) // 16px extra for padding
+      
+      // Apply constraints
+      const finalWidth = Math.min(requiredWidth, Math.min(maxWidth, viewportWidth - 40))
+      const finalHeight = Math.min(requiredHeight, Math.min(maxHeight, viewportHeight - 40))
+      
+      // Restore original overflow
+      contentRef.current.style.overflow = originalOverflow
+      
+      // Update size
+      resize.setSize({ width: finalWidth, height: finalHeight })
+      setOriginalSize({ width: finalWidth, height: finalHeight })
+      setHasAutoSized(true)
+      
+    } catch (error) {
+      console.warn('Auto-sizing failed:', error)
+      // Fallback to default size
+      resize.setSize({ width: minWidth, height: minHeight })
+      setOriginalSize({ width: minWidth, height: minHeight })
+      setHasAutoSized(true)
     }
-  }, [autoSizeWindow, autoSize, hasAutoSized, isMinimized])
+  }, [autoSize, hasAutoSized, isMinimized, maxWidth, maxHeight, minWidth, minHeight, resize])
 
   // Handle minimize/restore
   const handleMinimize = useCallback(() => {
@@ -113,6 +111,36 @@ export default function Window({
       setIsMinimized(true)
     }
   }, [isMinimized, resize.size, originalSize, resize])
+
+  // Initialize window after mount (client-side only)
+  useEffect(() => {
+    if (isInitialized) return
+
+    // Clear any existing timeout
+    if (initializationTimeoutRef.current) {
+      clearTimeout(initializationTimeoutRef.current)
+    }
+
+    // Initialize after a small delay to ensure DOM is ready
+    initializationTimeoutRef.current = setTimeout(() => {
+      // Bring to front
+      bringToFront()
+      
+      // Auto-size if enabled
+      if (autoSize && !hasAutoSized) {
+        autoSizeWindow()
+      }
+      
+      // Mark as initialized
+      setIsInitialized(true)
+    }, 100)
+
+    return () => {
+      if (initializationTimeoutRef.current) {
+        clearTimeout(initializationTimeoutRef.current)
+      }
+    }
+  }, [isInitialized, autoSize, hasAutoSized, autoSizeWindow, bringToFront])
 
   // Update resize position when drag position changes (but only when not resizing)
   useEffect(() => {
@@ -162,8 +190,9 @@ export default function Window({
     <div
       ref={nodeRef}
       className={cn(
-        "window font-sans border border-black transition-all duration-200 ease-out select-none",
+        "window font-sans border border-black select-none",
         variant === "dark" ? "bg-black text-white" : "bg-white text-black",
+        !isInitialized ? "opacity-0" : "opacity-100 transition-opacity duration-200",
         className,
       )}
       style={{
@@ -179,6 +208,7 @@ export default function Window({
       }}
       onMouseDown={drag.handleMouseDown}
       onClick={bringToFront}
+      suppressHydrationWarning={true}
     >
       <WindowHeader
         title={title}
@@ -197,8 +227,10 @@ export default function Window({
           )}
           style={{ 
             height: `calc(100% - ${TITLE_BAR_HEIGHT}px)`, 
-            overflow: autoSize && !hasAutoSized ? "visible" : "auto",
-            minHeight: autoSize ? "auto" : undefined
+            overflow: "auto", // Always use auto to prevent overflow
+            wordWrap: "break-word",
+            overflowWrap: "break-word",
+            hyphens: "auto"
           }}
         >
           {children}
