@@ -1,10 +1,38 @@
 "use client"
 
+import { useState, useEffect } from "react"
+
 interface TopMenuProps {
   onMenuClick: (section: string) => void
 }
 
 export default function TopMenu({ onMenuClick }: TopMenuProps) {
+  const [currentTime, setCurrentTime] = useState("")
+
+  useEffect(() => {
+    const updateTime = () => {
+      setCurrentTime(
+        new Date().toLocaleString("en-US", {
+          weekday: "short",
+          day: "2-digit",
+          month: "short",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+        })
+      )
+    }
+
+    // Set initial time
+    updateTime()
+
+    // Update time every second
+    const interval = setInterval(updateTime, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
+
   return (
     <div className="fixed top-0 left-0 right-0 bg-black text-white p-2 flex justify-between items-center z-50 font-sans">
       <div className="flex items-center gap-8">
@@ -21,16 +49,8 @@ export default function TopMenu({ onMenuClick }: TopMenuProps) {
           ))}
         </nav>
       </div>
-      <div className="text-xs">
-        {new Date().toLocaleString("en-US", {
-          weekday: "short",
-          day: "2-digit",
-          month: "short",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: false,
-        })}
+      <div className="text-xs" suppressHydrationWarning={true}>
+        {currentTime}
       </div>
     </div>
   )

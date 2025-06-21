@@ -110,7 +110,7 @@ export default function Window({
       resize.setSize({ width: resize.size.width, height: TITLE_BAR_HEIGHT })
       setIsMinimized(true)
     }
-  }, [isMinimized, resize.size, originalSize, resize])
+  }, [isMinimized, originalSize, resize])
 
   // Initialize window after mount (client-side only)
   useEffect(() => {
@@ -150,7 +150,7 @@ export default function Window({
       resize.setPosition(drag.position)
       lastDragPositionRef.current = drag.position
     }
-  }, [drag.position, resize.isResizing, resize])
+  }, [drag.position.x, drag.position.y, resize.isResizing, resize.setPosition])
 
   // Update original size when resizing (for proper restore)
   useEffect(() => {
@@ -180,7 +180,14 @@ export default function Window({
       document.removeEventListener("mousemove", handleMouseMove)
       document.removeEventListener("mouseup", handleMouseUp)
     }
-  }, [drag.isDragging, resize.isResizing, drag.handleMouseMove, drag.handleMouseUp, resize.handleMouseMove, resize.handleMouseUp])
+  }, [
+    drag.isDragging, 
+    resize.isResizing, 
+    drag.handleMouseMove, 
+    drag.handleMouseUp, 
+    resize.handleMouseMove, 
+    resize.handleMouseUp
+  ])
 
   // Use drag position when dragging, resize position when resizing
   const currentPosition = resize.isResizing ? resize.position : drag.position

@@ -1,90 +1,62 @@
-import { useState, useRef, useCallback } from "react"
+import { useState, useCallback } from "react"
 
-interface Position {
-  x: number
-  y: number
-}
-
-interface DragState {
-  isDragging: boolean
-  startPos: Position
-  offset: Position
-}
-
-export function useWindowDrag(initialPosition: Position, onBringToFront: () => void) {
+export function useWindowDrag(
+  initialPosition: { x: number; y: number },
+  onBringToFront: () => void
+) {
   const [position, setPosition] = useState(initialPosition)
-  const [dragState, setDragState] = useState<DragState>({
-    isDragging: false,
-    startPos: { x: 0, y: 0 },
-    offset: { x: 0, y: 0 }
-  })
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
 
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      // Only start drag if clicking on the window header
-      if (!(e.target instanceof HTMLElement) || !e.target.closest(".window-header")) {
-        return
-      }
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    // Only handle left mouse button and avoid dragging on buttons/inputs
+    if (e.button !== 0) return
+    
+    const target = e.target as HTMLElement
+    if (target.tagName === 'BUTTON' || target.tagName === 'INPUT') return
+    
+    // Calculate offset from mouse to window position
+    const rect = e.currentTarget.getBoundingClientRect()
+    const offsetX = e.clientX - rect.left
+    const offsetY = e.clientY - rect.top
+    
+    setDragOffset({ x: offsetX, y: offsetY })
+    setIsDragging(true)
+    onBringToFront()
+    
+    // Prevent text selection during drag
+    e.preventDefault()
+  }, [onBringToFront])
 
-      // Prevent text selection during drag
-      e.preventDefault()
-      document.body.style.userSelect = "none"
-      document.body.style.webkitUserSelect = "none"
-
-      onBringToFront()
-
-      const rect = e.currentTarget.getBoundingClientRect()
-      const offset = {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top
-      }
-
-      setDragState({
-        isDragging: true,
-        startPos: { x: e.clientX, y: e.clientY },
-        offset
-      })
-    },
-    [onBringToFront]
-  )
-
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
-      if (!dragState.isDragging) return
-
-      // Prevent default to avoid text selection
-      e.preventDefault()
-
-      const newPosition = {
-        x: e.clientX - dragState.offset.x,
-        y: e.clientY - dragState.offset.y
-      }
-
-      setPosition(newPosition)
-    },
-    [dragState]
-  )
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (!isDragging) return
+    
+    e.preventDefault()
+    
+    const newX = e.clientX - dragOffset.x
+    const newY = e.clientY - dragOffset.y
+    
+    // Keep window within viewport bounds
+    const maxX = window.innerWidth - 200 // Minimum 200px visible
+    const maxY = window.innerHeight - 32 // At least title bar visible
+    
+    const boundedX = Math.max(0, Math.min(newX, maxX))
+    const boundedY = Math.max(0, Math.min(newY, maxY))
+    
+    setPosition({ x: boundedX, y: boundedY })
+  }, [isDragging, dragOffset.x, dragOffset.y])
 
   const handleMouseUp = useCallback(() => {
-    if (dragState.isDragging) {
-      setDragState({
-        isDragging: false,
-        startPos: { x: 0, y: 0 },
-        offset: { x: 0, y: 0 }
-      })
-
-      // Restore text selection
-      document.body.style.userSelect = ""
-      document.body.style.webkitUserSelect = ""
+    if (isDragging) {
+      setIsDragging(false)
     }
-  }, [dragState.isDragging])
+  }, [isDragging])
 
   return {
     position,
-    setPosition,
-    isDragging: dragState.isDragging,
+    isDragging,
     handleMouseDown,
     handleMouseMove,
-    handleMouseUp
+    handleMouseUp,
   }
 } 
