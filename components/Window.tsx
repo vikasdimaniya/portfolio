@@ -158,7 +158,7 @@ const Window = forwardRef<WindowRef, WindowProps>(({
          drag.position.y !== lastDragPositionRef.current.y)) {
       resize.setPosition(drag.position)
       lastDragPositionRef.current = drag.position
-    }
+      }
   }, [drag.position.x, drag.position.y, resize.isResizing, resize.setPosition])
 
   // Update original size when resizing (for proper restore)
@@ -237,10 +237,10 @@ const Window = forwardRef<WindowRef, WindowProps>(({
       {!isMinimized && (
         <div
           ref={contentRef}
-          className={cn(
+        className={cn(
             "p-4 select-text",
-            variant === "dark" ? "bg-black text-white" : "bg-white text-black",
-          )}
+          variant === "dark" ? "bg-black text-white" : "bg-white text-black",
+        )}
           style={{ 
             height: `calc(100% - ${TITLE_BAR_HEIGHT}px)`, 
             overflow: "auto", // Always use auto to prevent overflow
@@ -248,9 +248,9 @@ const Window = forwardRef<WindowRef, WindowProps>(({
             overflowWrap: "break-word",
             hyphens: "auto"
           }}
-        >
-          {children}
-        </div>
+      >
+        {children}
+      </div>
       )}
       
       {/* Resize handles - only show when not minimized */}

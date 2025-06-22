@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react"
 
 interface TopMenuProps {
   onMenuClick: (section: string) => void
+  onCategoryFilter?: (category: string | null) => void
 }
 
 interface MenuItem {
@@ -12,7 +13,7 @@ interface MenuItem {
   items?: { label: string; action: string; separator?: boolean; shortcut?: string }[]
 }
 
-export default function TopMenu({ onMenuClick }: TopMenuProps) {
+export default function TopMenu({ onMenuClick, onCategoryFilter }: TopMenuProps) {
   const [currentTime, setCurrentTime] = useState("")
   const [isMounted, setIsMounted] = useState(false)
   const [activeMenu, setActiveMenu] = useState<string | null>(null)
@@ -69,6 +70,13 @@ export default function TopMenu({ onMenuClick }: TopMenuProps) {
       items: [
         { label: "All Projects", action: "projects" },
         { label: "Featured Work", action: "projects" },
+        { separator: true, label: "", action: "" },
+        { label: "Categories", action: "category-all" },
+        { label: "🤖 AI & Machine Learning", action: "category-ai" },
+        { label: "👁️ Computer Vision & Deep Learning", action: "category-cv" },
+        { label: "🌐 Web Development & Full-Stack", action: "category-web" },
+        { label: "📊 Business Analysis & Case Studies", action: "category-business" },
+        { label: "🎮 Gaming & Simulation", action: "category-gaming" },
         { separator: true, label: "", action: "" },
         { label: "Technologies Used", action: "skills" }
       ]
@@ -147,7 +155,30 @@ export default function TopMenu({ onMenuClick }: TopMenuProps) {
 
   const handleMenuItemClick = (action: string) => {
     setActiveMenu(null)
-    onMenuClick(action)
+    
+    // Handle category filtering
+    if (action.startsWith('category-')) {
+      if (action === 'category-all') {
+        onCategoryFilter?.(null)
+      } else {
+        const categoryMap: { [key: string]: string } = {
+          'category-ai': '🤖 AI & Machine Learning',
+          'category-cv': '👁️ Computer Vision & Deep Learning',
+          'category-web': '🌐 Web Development & Full-Stack',
+          'category-business': '📊 Business Analysis & Case Studies',
+          'category-gaming': '🎮 Gaming & Simulation'
+        }
+        onCategoryFilter?.(categoryMap[action])
+      }
+      // Always open projects when filtering categories
+      onMenuClick('projects')
+    } else if (action === 'projects') {
+      // Clear category filter when clicking "All Projects"
+      onCategoryFilter?.(null)
+      onMenuClick(action)
+    } else {
+      onMenuClick(action)
+    }
   }
 
   return (

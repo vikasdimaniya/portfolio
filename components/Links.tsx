@@ -10,41 +10,41 @@ interface LinksProps {
 
 const Links = forwardRef<WindowRef, LinksProps>(
   ({ defaultPosition }, ref) => {
-    return (
+  return (
       <Window ref={ref} title="links.exe" defaultPosition={defaultPosition} variant="dark" autoSize={true} maxWidth={300} minWidth={200}>
-        <div className="space-y-4">
-          <h2 className="text-lg font-bold mb-4">My Links</h2>
-          <div className="space-y-2">
-            <a
-              href="https://github.com/vikasdimaniya"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center space-x-2 text-blue-400 hover:text-blue-300"
-            >
-              <FaGithub />
-              <span>GitHub</span>
-            </a>
-            <a
-              href="https://linkedin.com/in/vikasdimaniya"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center space-x-2 text-blue-400 hover:text-blue-300"
-            >
-              <FaLinkedin />
-              <span>LinkedIn</span>
-            </a>
-            <a
-              href="mailto:kumar3s@uwindsor.ca"
-              className="flex items-center space-x-2 text-blue-400 hover:text-blue-300"
-            >
-              <FaEnvelope />
-              <span>Email</span>
-            </a>
-          </div>
+      <div className="space-y-4">
+        <h2 className="text-lg font-bold mb-4">My Links</h2>
+        <div className="space-y-2">
+          <a
+            href="https://github.com/vikasdimaniya"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center space-x-2 text-blue-400 hover:text-blue-300"
+          >
+            <FaGithub />
+            <span>GitHub</span>
+          </a>
+          <a
+            href="https://linkedin.com/in/vikasdimaniya"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center space-x-2 text-blue-400 hover:text-blue-300"
+          >
+            <FaLinkedin />
+            <span>LinkedIn</span>
+          </a>
+          <a
+            href="mailto:kumar3s@uwindsor.ca"
+            className="flex items-center space-x-2 text-blue-400 hover:text-blue-300"
+          >
+            <FaEnvelope />
+            <span>Email</span>
+          </a>
         </div>
-      </Window>
-    )
-  }
+      </div>
+    </Window>
+  )
+}
 )
 
 Links.displayName = "Links"

@@ -21,8 +21,8 @@ interface ProjectCategory {
   projects: Project[];
 }
 
-const Projects = forwardRef<WindowRef, { defaultPosition: { x: number; y: number } }>(
-  ({ defaultPosition }, ref) => {
+const Projects = forwardRef<WindowRef, { defaultPosition: { x: number; y: number }; selectedCategory?: string | null; onClearFilter?: () => void }>(
+  ({ defaultPosition, selectedCategory, onClearFilter }, ref) => {
     const projectCategories: ProjectCategory[] = [
       {
         title: "🤖 AI & Machine Learning",
@@ -156,93 +156,88 @@ const Projects = forwardRef<WindowRef, { defaultPosition: { x: number; y: number
       }
     ];
 
-    return (
+    // Filter categories based on selection
+    const filteredCategories = selectedCategory 
+      ? projectCategories.filter(category => category.title === selectedCategory)
+      : projectCategories;
+
+  return (
       <Window ref={ref} title="projects.exe" defaultPosition={defaultPosition} variant="light">
-        <div className="space-y-6 max-h-96 overflow-y-auto">
-          {/* Project Categories */}
-          {projectCategories.map((category, categoryIndex) => (
-            <div key={categoryIndex} className="border border-gray-300 p-3">
-              <div className="flex items-center mb-3">
-                <span className="text-lg mr-2">{category.icon}</span>
-                <h2 className="text-sm font-bold text-gray-800">{category.title}</h2>
-                <div className="ml-2 bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
-                  {category.projects.length}
-                </div>
-              </div>
-              
-              <div className="space-y-3">
+        <div className="space-y-6">
+          {filteredCategories.map((category, categoryIndex) => (
+            <div key={categoryIndex} className="space-y-2">
+              <h3 className="text-sm font-bold">{category.title}</h3>
+              <div className="space-y-4">
                 {category.projects.map((project, projectIndex) => (
-                  <div key={projectIndex} className="border border-gray-200 p-3 space-y-2">
-                    <div className="flex justify-between items-start">
+                  <div key={projectIndex} className="space-y-2">
+                    <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <div className="flex items-center mb-1">
-                          <h3 className="text-sm font-bold text-gray-800">{project.name}</h3>
+                        <div className="flex items-center gap-2 mb-1">
+                          <h4 className="text-sm font-bold">{project.name}</h4>
                           {project.stars && (
-                            <div className="ml-2 flex items-center text-yellow-600">
+                            <div className="flex items-center text-yellow-600">
                               <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                               </svg>
-                              {project.stars}
-                            </div>
+                              <span className="text-xs">{project.stars}</span>
+                    </div>
                           )}
                           {project.collaborative && (
-                            <span className="ml-2 bg-purple-100 text-purple-800 px-1 py-0.5 rounded text-xs font-medium">
+                            <span className="bg-purple-100 text-purple-800 px-1 py-0.5 rounded text-xs">
                               Collaborative
                             </span>
                           )}
                           {project.forked && (
-                            <span className="ml-2 bg-green-100 text-green-800 px-1 py-0.5 rounded text-xs font-medium">
+                            <span className="bg-green-100 text-green-800 px-1 py-0.5 rounded text-xs">
                               Enhanced Fork
                             </span>
                           )}
-                        </div>
-                        <div className="flex items-center mb-2">
-                          <span className="w-2 h-2 bg-blue-500 rounded-full mr-1"></span>
-                          <span className="text-xs text-gray-600 font-medium">{project.language}</span>
-                        </div>
-                      </div>
+                    </div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                          <span className="text-xs text-gray-500">{project.language}</span>
+              </div>
+            </div>
                     </div>
                     
-                    <p className="text-xs text-gray-700 leading-relaxed">{project.description}</p>
+                    <p className="text-xs text-gray-600">{project.description}</p>
                     
-                    {/* Key Highlights */}
+                    <div className="space-y-2">
                     <div>
-                      <h4 className="text-xs font-semibold text-gray-800 mb-1">🎯 Key Features:</h4>
-                      <div className="flex flex-wrap gap-1">
-                        {project.highlights.map((highlight, idx) => (
-                          <span key={idx} className="bg-blue-50 text-blue-700 px-1 py-0.5 rounded text-xs">
-                            {highlight}
-                          </span>
-                        ))}
+                        <h5 className="text-xs font-bold text-gray-700 mb-1">Key Features:</h5>
+                        <div className="flex flex-wrap gap-1">
+                          {project.highlights.map((highlight, idx) => (
+                            <span key={idx} className="bg-blue-100 text-blue-800 px-2 py-1 text-xs border">
+                              {highlight}
+                            </span>
+                          ))}
+              </div>
+            </div>
+
+                      <div>
+                        <h5 className="text-xs font-bold text-gray-700 mb-1">Tech Stack:</h5>
+                        <div className="flex flex-wrap gap-1">
+                          {project.tech.map((tech, idx) => (
+                            <span key={idx} className="bg-gray-100 text-gray-800 px-2 py-1 text-xs border">
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     </div>
                     
-                    {/* Tech Stack */}
-                    <div>
-                      <h4 className="text-xs font-semibold text-gray-800 mb-1">🛠️ Tech Stack:</h4>
-                      <div className="flex flex-wrap gap-1">
-                        {project.tech.map((tech, idx) => (
-                          <span key={idx} className="bg-gray-100 text-gray-700 px-1 py-0.5 rounded text-xs">
-                            {tech}
-                          </span>
-                        ))}
+                    {project.github !== "#" && (
+                      <div className="pt-1">
+                        <a 
+                          href={project.github} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-400 hover:underline"
+                        >
+                          View Code →
+                        </a>
                       </div>
-                    </div>
-                    
-                    {/* Actions */}
-                    <div className="flex space-x-2 pt-2">
-                      <a 
-                        href={project.github} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="flex items-center px-2 py-1 bg-gray-900 text-white rounded text-xs font-medium hover:bg-gray-800 transition-colors"
-                      >
-                        <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.30.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
-                        </svg>
-                        View Code
-                      </a>
-                    </div>
+                    )}
                   </div>
                 ))}
               </div>

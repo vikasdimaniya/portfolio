@@ -39,19 +39,7 @@ const GitHubWidget = () => (
   </div>
 )
 
-const WeatherWidget = () => (
-  <div className="bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-md rounded-2xl p-4 border border-white/20 shadow-lg">
-    <div className="text-center">
-      <div className="text-white/80 text-xs mb-1">Windsor, ON</div>
-      <div className="text-white text-2xl font-light mb-2">20°</div>
-      <div className="flex items-center justify-center mb-2">
-        <div className="w-6 h-6 rounded-full bg-yellow-400/80 mr-2"></div>
-        <span className="text-white/90 text-xs">Sunny</span>
-      </div>
-      <div className="text-white/70 text-xs">Perfect coding weather</div>
-    </div>
-  </div>
-)
+
 
 const CalendarWidget = () => {
   const today = new Date()
@@ -69,44 +57,9 @@ const CalendarWidget = () => {
   )
 }
 
-const ProgressWidget = () => (
-  <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 shadow-lg">
-    <div className="flex items-center justify-between mb-3">
-      <span className="text-white text-sm font-medium">Portfolio</span>
-      <span className="text-green-400 text-lg font-semibold">95%</span>
-    </div>
-    <div className="w-full bg-white/20 rounded-full h-2 mb-2">
-      <div className="bg-gradient-to-r from-green-400 to-green-500 h-2 rounded-full" style={{width: '95%'}}></div>
-    </div>
-    <div className="text-white/70 text-xs">Almost complete!</div>
-  </div>
-)
 
-const SkillsWidget = () => (
-  <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 shadow-lg">
-    <div className="text-white text-sm font-medium mb-3">Top Skills</div>
-    <div className="space-y-2">
-      {[
-        { skill: 'AI/ML', level: 95 },
-        { skill: 'Python', level: 90 },
-        { skill: 'Node.js', level: 85 }
-      ].map((item, index) => (
-        <div key={index}>
-          <div className="flex justify-between items-center mb-1">
-            <span className="text-white/80 text-xs">{item.skill}</span>
-            <span className="text-white/70 text-xs">{item.level}%</span>
-          </div>
-          <div className="w-full bg-white/20 rounded-full h-1">
-            <div 
-              className="bg-gradient-to-r from-blue-400 to-purple-500 h-1 rounded-full" 
-              style={{width: `${item.level}%`}}
-            ></div>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-)
+
+
 
 const TimeWidget = () => {
   const [time, setTime] = useState(new Date())
@@ -151,6 +104,7 @@ const ProjectsStatsWidget = () => (
 
 export default function Home() {
   const [openWindows, setOpenWindows] = useState<string[]>(["hero"])
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const windowRefs = useRef<Record<string, WindowRef | null>>({})
 
   const handleMenuClick = (section: string) => {
@@ -189,51 +143,23 @@ export default function Home() {
       <div className="absolute top-40 right-32 w-24 h-24 bg-purple-300/10 rounded-full blur-lg"></div>
       <div className="absolute bottom-32 left-1/3 w-40 h-40 bg-blue-300/5 rounded-full blur-2xl"></div>
       
-      {/* Widget Grid - Background Layer */}
-      <div className="absolute inset-0 p-8 pointer-events-none">
-        {/* Top row widgets */}
-        <div className="absolute top-8 left-8">
-          <CalendarWidget />
-        </div>
-        
-        <div className="absolute top-8 left-32">
-          <WeatherWidget />
-        </div>
-        
-        <div className="absolute top-8 right-8">
-          <TimeWidget />
-        </div>
-        
-        {/* Middle row widgets */}
-        <div className="absolute top-48 left-8">
-          <GitHubWidget />
-        </div>
-        
-        <div className="absolute top-48 right-8">
-          <SkillsWidget />
-        </div>
-        
-        {/* Bottom row widgets */}
-        <div className="absolute bottom-8 left-8">
-          <ProgressWidget />
-        </div>
-        
-        <div className="absolute bottom-8 right-8">
-          <ProjectsStatsWidget />
-        </div>
-        
-        {/* Additional scattered widgets for depth */}
-        <div className="absolute top-80 left-1/4">
-          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10">
-            <div className="text-white/60 text-xs">🚀 Active Projects</div>
-            <div className="text-white text-sm font-medium mt-1">VidMetaStream</div>
+      {/* Widget Grid - Right Side Layout */}
+      <div className="absolute top-16 right-4 w-80 pointer-events-none">
+        <div className="grid grid-cols-2 gap-1">
+          {/* Top row */}
+          <div className="transform scale-75 origin-top-left">
+            <CalendarWidget />
           </div>
-        </div>
-        
-        <div className="absolute bottom-32 right-1/3">
-          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10">
-            <div className="text-white/60 text-xs">🎯 Current Focus</div>
-            <div className="text-white text-sm font-medium mt-1">AI Research</div>
+          <div className="transform scale-75 origin-top-right">
+            <TimeWidget />
+          </div>
+          
+          {/* Bottom row */}
+          <div className="transform scale-75 origin-bottom-left">
+            <GitHubWidget />
+          </div>
+          <div className="transform scale-75 origin-bottom-right">
+            <ProjectsStatsWidget />
           </div>
         </div>
       </div>
@@ -299,7 +225,10 @@ export default function Home() {
       
       {/* Top Menu - Interactive Layer */}
       <div className="relative z-40">
-        <TopMenu onMenuClick={handleMenuClick} />
+        <TopMenu 
+          onMenuClick={handleMenuClick} 
+          onCategoryFilter={setSelectedCategory}
+        />
       </div>
       
       {/* Windows - Interactive Layer */}
@@ -333,6 +262,8 @@ export default function Home() {
         {openWindows.includes("projects") && (
           <Projects 
             defaultPosition={getWindowPosition(openWindows.indexOf("projects"))}
+            selectedCategory={selectedCategory}
+            onClearFilter={() => setSelectedCategory(null)}
             ref={(ref) => { windowRefs.current["projects"] = ref }}
           />
         )}
