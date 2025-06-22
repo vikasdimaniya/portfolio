@@ -8,6 +8,7 @@ import Education from "@/components/Education"
 import Projects from "@/components/Projects"
 import Skills from "@/components/Skills"
 import Links from "@/components/Links"
+import Certifications from "@/components/Certifications"
 import { WindowRef } from "@/components/Window"
 
 export default function Home() {
@@ -150,6 +151,13 @@ export default function Home() {
         <Links 
           defaultPosition={getWindowPosition(openWindows.indexOf("links"))}
           ref={(ref) => { windowRefs.current["links"] = ref }}
+        />
+      )}
+      
+      {openWindows.includes("certifications") && (
+        <Certifications 
+          defaultPosition={getWindowPosition(openWindows.indexOf("certifications"))}
+          ref={(ref) => { windowRefs.current["certifications"] = ref }}
         />
       )}
     </div>

@@ -25,14 +25,10 @@ export default function TopMenu({ onMenuClick }: TopMenuProps) {
       label: "About",
       action: "about",
       items: [
-        { label: "About This Portfolio", action: "about" },
+        { label: "Hero Section", action: "about" },
+        { label: "Personal Info", action: "about" },
         { separator: true, label: "", action: "" },
-        { label: "System Information...", action: "about" },
-        { label: "Portfolio Store", action: "projects" },
-        { separator: true, label: "", action: "" },
-        { label: "Recent Projects", action: "projects" },
-        { separator: true, label: "", action: "" },
-        { label: "Contact Info", action: "links" }
+        { label: "Contact", action: "links" }
       ]
     },
     {
@@ -42,8 +38,7 @@ export default function TopMenu({ onMenuClick }: TopMenuProps) {
         { label: "Work History", action: "experience" },
         { label: "Professional Skills", action: "skills" },
         { separator: true, label: "", action: "" },
-        { label: "Career Timeline", action: "experience" },
-        { label: "Achievements", action: "experience" }
+        { label: "Projects", action: "projects" }
       ]
     },
     {
@@ -51,10 +46,21 @@ export default function TopMenu({ onMenuClick }: TopMenuProps) {
       action: "education",
       items: [
         { label: "Academic Background", action: "education" },
-        { label: "Certifications", action: "education" },
+        { label: "Degrees & Universities", action: "education" },
         { separator: true, label: "", action: "" },
-        { label: "Skills Acquired", action: "skills" },
-        { label: "Learning Path", action: "education" }
+        { label: "Certifications", action: "certifications" }
+      ]
+    },
+    {
+      label: "Certifications",
+      action: "certifications",
+      items: [
+        { label: "All Certifications", action: "certifications" },
+        { label: "LinkedIn Learning", action: "certifications" },
+        { label: "HackerRank", action: "certifications" },
+        { label: "Kaggle", action: "certifications" },
+        { separator: true, label: "", action: "" },
+        { label: "Skills Acquired", action: "skills" }
       ]
     },
     {
@@ -64,8 +70,7 @@ export default function TopMenu({ onMenuClick }: TopMenuProps) {
         { label: "All Projects", action: "projects" },
         { label: "Featured Work", action: "projects" },
         { separator: true, label: "", action: "" },
-        { label: "Technologies Used", action: "skills" },
-        { label: "Open Source", action: "projects" }
+        { label: "Technologies Used", action: "skills" }
       ]
     },
     {
@@ -76,7 +81,7 @@ export default function TopMenu({ onMenuClick }: TopMenuProps) {
         { label: "Programming Languages", action: "skills" },
         { label: "Frameworks & Tools", action: "skills" },
         { separator: true, label: "", action: "" },
-        { label: "Expertise Level", action: "skills" }
+        { label: "Certifications", action: "certifications" }
       ]
     },
     {
