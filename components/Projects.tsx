@@ -21,8 +21,15 @@ interface ProjectCategory {
   projects: Project[];
 }
 
-const Projects = forwardRef<WindowRef, { defaultPosition: { x: number; y: number }; selectedCategory?: string | null; onClearFilter?: () => void }>(
-  ({ defaultPosition, selectedCategory, onClearFilter }, ref) => {
+interface ProjectsProps {
+  defaultPosition: { x: number; y: number }
+  selectedCategory?: string | null
+  onClearFilter?: () => void
+  onClose?: () => void
+}
+
+const Projects = forwardRef<WindowRef, ProjectsProps>(
+  ({ defaultPosition, selectedCategory, onClearFilter, onClose }, ref) => {
     const projectCategories: ProjectCategory[] = [
       {
         title: "🤖 AI & Machine Learning",
@@ -162,7 +169,7 @@ const Projects = forwardRef<WindowRef, { defaultPosition: { x: number; y: number
       : projectCategories;
 
   return (
-      <Window ref={ref} title="projects.exe" defaultPosition={defaultPosition} variant="light">
+      <Window ref={ref} title="projects.exe" defaultPosition={defaultPosition} variant="light" onClose={onClose}>
         <div className="space-y-6">
           {filteredCategories.map((category, categoryIndex) => (
             <div key={categoryIndex} className="space-y-2">

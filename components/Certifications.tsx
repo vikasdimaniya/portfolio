@@ -3,10 +3,15 @@
 import { forwardRef } from "react"
 import Window, { WindowRef } from "./Window"
 
-const Certifications = forwardRef<WindowRef, { defaultPosition: { x: number; y: number } }>(
-  ({ defaultPosition }, ref) => {
+interface CertificationsProps {
+  defaultPosition: { x: number; y: number }
+  onClose?: () => void
+}
+
+const Certifications = forwardRef<WindowRef, CertificationsProps>(
+  ({ defaultPosition, onClose }, ref) => {
     return (
-      <Window ref={ref} title="certifications.exe" defaultPosition={defaultPosition} variant="light">
+      <Window ref={ref} title="certifications.exe" defaultPosition={defaultPosition} variant="light" onClose={onClose}>
         <div className="space-y-6">
           <div className="text-center mb-6">
             <h2 className="text-lg font-bold text-gray-800">Professional Certifications</h2>

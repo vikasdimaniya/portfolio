@@ -3,10 +3,15 @@
 import { forwardRef } from "react"
 import Window, { WindowRef } from "./Window"
 
-const Skills = forwardRef<WindowRef, { defaultPosition: { x: number; y: number } }>(
-  ({ defaultPosition }, ref) => {
+interface SkillsProps {
+  defaultPosition: { x: number; y: number }
+  onClose?: () => void
+}
+
+const Skills = forwardRef<WindowRef, SkillsProps>(
+  ({ defaultPosition, onClose }, ref) => {
     return (
-      <Window ref={ref} title="skills.exe" defaultPosition={defaultPosition} variant="light">
+      <Window ref={ref} title="skills.exe" defaultPosition={defaultPosition} variant="light" onClose={onClose}>
         <div className="space-y-6">
           <div className="grid gap-4">
             {/* Top Skills from LinkedIn */}

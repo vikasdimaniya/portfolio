@@ -120,6 +120,14 @@ export default function Home() {
     }
   }
 
+  const handleCloseWindow = (section: string) => {
+    setOpenWindows(openWindows.filter(window => window !== section))
+    // Clean up the ref
+    if (windowRefs.current[section]) {
+      windowRefs.current[section] = null
+    }
+  }
+
   const getWindowPosition = (index: number) => {
     const offset = index * 30
     return { x: 50 + offset, y: 80 + offset }
@@ -276,16 +284,80 @@ export default function Home() {
         />
       </div>
       
+      {/* Dock - macOS Style */}
+      <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50">
+        <div className="bg-white/10 backdrop-blur-2xl rounded-2xl border border-white/20 shadow-2xl px-3 py-2">
+          <div className="flex items-center gap-1">
+            {/* Finder Icon */}
+            <div className="w-12 h-12 bg-gradient-to-b from-blue-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition-transform duration-200">
+              <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2L2 7v10c0 5.55 3.84 9.06 9 9.93 5.16-.87 9-4.38 9-9.93V7l-10-5z"/>
+              </svg>
+            </div>
+
+            {/* Separator */}
+            <div className="w-px h-8 bg-white/20 mx-1"></div>
+
+            {/* Open Windows */}
+            {openWindows.map((window, index) => {
+              const windowIcons = {
+                hero: { icon: "👋", color: "from-purple-400 to-purple-600", label: "About" },
+                about: { icon: "👋", color: "from-purple-400 to-purple-600", label: "About" },
+                experience: { icon: "💼", color: "from-green-400 to-green-600", label: "Experience" },
+                education: { icon: "🎓", color: "from-blue-400 to-blue-600", label: "Education" },
+                projects: { icon: "🚀", color: "from-orange-400 to-orange-600", label: "Projects" },
+                skills: { icon: "⚡", color: "from-yellow-400 to-yellow-600", label: "Skills" },
+                links: { icon: "🔗", color: "from-cyan-400 to-cyan-600", label: "Links" },
+                certifications: { icon: "🏆", color: "from-red-400 to-red-600", label: "Certifications" }
+              }
+
+              const windowData = windowIcons[window as keyof typeof windowIcons]
+              if (!windowData) return null
+
+              return (
+                <div key={window} className="relative group">
+                  <div 
+                    className={`w-12 h-12 bg-gradient-to-b ${windowData.color} rounded-xl flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition-transform duration-200 relative`}
+                    onClick={() => handleMenuClick(window)}
+                  >
+                    <span className="text-xl">{windowData.icon}</span>
+                    {/* Active indicator dot */}
+                    <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-white rounded-full"></div>
+                  </div>
+                  
+                  {/* Tooltip */}
+                  <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 bg-gray-900/90 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                    {windowData.label}
+                  </div>
+                </div>
+              )
+            })}
+
+            {/* Separator */}
+            <div className="w-px h-8 bg-white/20 mx-1"></div>
+
+            {/* Trash */}
+            <div className="w-12 h-12 bg-gradient-to-b from-gray-400 to-gray-600 rounded-xl flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition-transform duration-200">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Windows - Interactive Layer */}
       <div className="relative z-30">
         {openWindows.includes("hero") && (
           <Hero 
+            onClose={() => handleCloseWindow("hero")}
             ref={(ref) => { windowRefs.current["hero"] = ref }}
           />
         )}
         
         {openWindows.includes("about") && (
           <Hero 
+            onClose={() => handleCloseWindow("about")}
             ref={(ref) => { windowRefs.current["about"] = ref }}
           />
         )}
@@ -293,6 +365,7 @@ export default function Home() {
         {openWindows.includes("experience") && (
           <Experience 
             defaultPosition={getWindowPosition(openWindows.indexOf("experience"))}
+            onClose={() => handleCloseWindow("experience")}
             ref={(ref) => { windowRefs.current["experience"] = ref }}
           />
         )}
@@ -300,6 +373,7 @@ export default function Home() {
         {openWindows.includes("education") && (
           <Education 
             defaultPosition={getWindowPosition(openWindows.indexOf("education"))}
+            onClose={() => handleCloseWindow("education")}
             ref={(ref) => { windowRefs.current["education"] = ref }}
           />
         )}
@@ -309,6 +383,7 @@ export default function Home() {
             defaultPosition={getWindowPosition(openWindows.indexOf("projects"))}
             selectedCategory={selectedCategory}
             onClearFilter={() => setSelectedCategory(null)}
+            onClose={() => handleCloseWindow("projects")}
             ref={(ref) => { windowRefs.current["projects"] = ref }}
           />
         )}
@@ -316,6 +391,7 @@ export default function Home() {
         {openWindows.includes("skills") && (
           <Skills 
             defaultPosition={getWindowPosition(openWindows.indexOf("skills"))}
+            onClose={() => handleCloseWindow("skills")}
             ref={(ref) => { windowRefs.current["skills"] = ref }}
           />
         )}
@@ -323,6 +399,7 @@ export default function Home() {
         {openWindows.includes("links") && (
           <Links 
             defaultPosition={getWindowPosition(openWindows.indexOf("links"))}
+            onClose={() => handleCloseWindow("links")}
             ref={(ref) => { windowRefs.current["links"] = ref }}
           />
         )}
@@ -330,6 +407,7 @@ export default function Home() {
         {openWindows.includes("certifications") && (
           <Certifications 
             defaultPosition={getWindowPosition(openWindows.indexOf("certifications"))}
+            onClose={() => handleCloseWindow("certifications")}
             ref={(ref) => { windowRefs.current["certifications"] = ref }}
           />
         )}

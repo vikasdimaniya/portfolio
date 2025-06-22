@@ -19,8 +19,13 @@ function DetailWindow({ title, onClose, defaultPosition, children }: DetailWindo
   )
 }
 
-const Experience = forwardRef<WindowRef, { defaultPosition: { x: number; y: number } }>(
-  ({ defaultPosition }, ref) => {
+interface ExperienceProps {
+  defaultPosition: { x: number; y: number }
+  onClose?: () => void
+}
+
+const Experience = forwardRef<WindowRef, ExperienceProps>(
+  ({ defaultPosition, onClose }, ref) => {
     const [openDetails, setOpenDetails] = useState<string[]>([])
     const [windowWidth, setWindowWidth] = useState(0)
 
@@ -42,7 +47,7 @@ const Experience = forwardRef<WindowRef, { defaultPosition: { x: number; y: numb
 
     return (
       <>
-        <Window ref={ref} title="experience.exe" defaultPosition={defaultPosition} variant="dark">
+        <Window ref={ref} title="experience.exe" defaultPosition={defaultPosition} variant="dark" onClose={onClose}>
           <div className="h-full overflow-y-auto pr-4">
             <div className="space-y-8">
               <div className="relative">

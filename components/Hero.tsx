@@ -4,7 +4,11 @@ import { forwardRef } from "react"
 import Window, { WindowRef } from "./Window"
 import { FaEnvelope, FaLinkedin, FaGithub } from "react-icons/fa"
 
-const Hero = forwardRef<WindowRef>((props, ref) => {
+interface HeroProps {
+  onClose?: () => void
+}
+
+const Hero = forwardRef<WindowRef, HeroProps>(({ onClose }, ref) => {
   return (
     <Window 
       ref={ref}
@@ -13,6 +17,7 @@ const Hero = forwardRef<WindowRef>((props, ref) => {
       autoSize={true}
       maxWidth={500}
       minWidth={300}
+      onClose={onClose}
     >
       <div className="space-y-6">
         <h1 className="text-2xl font-bold">VIKAS KUMAR</h1>

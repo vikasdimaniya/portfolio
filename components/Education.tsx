@@ -3,10 +3,15 @@
 import { forwardRef } from "react"
 import Window, { WindowRef } from "./Window"
 
-const Education = forwardRef<WindowRef, { defaultPosition: { x: number; y: number } }>(
-  ({ defaultPosition }, ref) => {
+interface EducationProps {
+  defaultPosition: { x: number; y: number }
+  onClose?: () => void
+}
+
+const Education = forwardRef<WindowRef, EducationProps>(
+  ({ defaultPosition, onClose }, ref) => {
     return (
-      <Window ref={ref} title="education.exe" defaultPosition={defaultPosition} variant="light">
+      <Window ref={ref} title="education.exe" defaultPosition={defaultPosition} variant="light" onClose={onClose}>
         <div className="space-y-8">
           <div className="relative">
             {/* Timeline */}
