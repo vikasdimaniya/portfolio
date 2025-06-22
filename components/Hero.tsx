@@ -6,9 +6,10 @@ import { FaEnvelope, FaLinkedin, FaGithub } from "react-icons/fa"
 
 interface HeroProps {
   onClose?: () => void
+  onMinimize?: () => void
 }
 
-const Hero = forwardRef<WindowRef, HeroProps>(({ onClose }, ref) => {
+const Hero = forwardRef<WindowRef, HeroProps>(({ onClose, onMinimize }, ref) => {
   return (
     <Window 
       ref={ref}
@@ -18,6 +19,7 @@ const Hero = forwardRef<WindowRef, HeroProps>(({ onClose }, ref) => {
       maxWidth={500}
       minWidth={300}
       onClose={onClose}
+      onMinimize={onMinimize}
     >
       <div className="space-y-6">
         <h1 className="text-2xl font-bold">VIKAS KUMAR</h1>

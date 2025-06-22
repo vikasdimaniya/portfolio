@@ -6,12 +6,13 @@ import Window, { WindowRef } from "./Window"
 interface EducationProps {
   defaultPosition: { x: number; y: number }
   onClose?: () => void
+  onMinimize?: () => void
 }
 
 const Education = forwardRef<WindowRef, EducationProps>(
-  ({ defaultPosition, onClose }, ref) => {
+  ({ defaultPosition, onClose, onMinimize }, ref) => {
     return (
-      <Window ref={ref} title="education.exe" defaultPosition={defaultPosition} variant="light" onClose={onClose}>
+      <Window ref={ref} title="education.exe" defaultPosition={defaultPosition} variant="light" onClose={onClose} onMinimize={onMinimize}>
         <div className="space-y-8">
           <div className="relative">
             {/* Timeline */}

@@ -6,12 +6,13 @@ import Window, { WindowRef } from "./Window"
 interface SkillsProps {
   defaultPosition: { x: number; y: number }
   onClose?: () => void
+  onMinimize?: () => void
 }
 
 const Skills = forwardRef<WindowRef, SkillsProps>(
-  ({ defaultPosition, onClose }, ref) => {
+  ({ defaultPosition, onClose, onMinimize }, ref) => {
     return (
-      <Window ref={ref} title="skills.exe" defaultPosition={defaultPosition} variant="light" onClose={onClose}>
+      <Window ref={ref} title="skills.exe" defaultPosition={defaultPosition} variant="light" onClose={onClose} onMinimize={onMinimize}>
         <div className="space-y-6">
           <div className="grid gap-4">
             {/* Top Skills from LinkedIn */}

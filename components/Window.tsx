@@ -15,6 +15,7 @@ interface WindowProps {
   className?: string
   defaultPosition?: { x: number; y: number }
   onClose?: () => void
+  onMinimize?: () => void
   variant?: "light" | "dark"
   autoSize?: boolean
   maxWidth?: number
@@ -40,6 +41,7 @@ const Window = forwardRef<WindowRef, WindowProps>(({
   className = "",
   defaultPosition = { x: 0, y: 0 },
   onClose,
+  onMinimize,
   variant = "light",
   autoSize = true,
   maxWidth = DEFAULT_MAX_WIDTH,
@@ -109,17 +111,23 @@ const Window = forwardRef<WindowRef, WindowProps>(({
 
   // Handle minimize/restore
   const handleMinimize = useCallback(() => {
-    if (isMinimized) {
-      // Restore window
-      resize.setSize(originalSize)
-      setIsMinimized(false)
+    if (onMinimize) {
+      // Use external minimize handler for proper dock integration
+      onMinimize()
     } else {
-      // Minimize window - store current size and collapse to title bar
-      setOriginalSize(resize.size)
-      resize.setSize({ width: resize.size.width, height: TITLE_BAR_HEIGHT })
-      setIsMinimized(true)
+      // Fallback to internal minimize behavior
+      if (isMinimized) {
+        // Restore window
+        resize.setSize(originalSize)
+        setIsMinimized(false)
+      } else {
+        // Minimize window - store current size and collapse to title bar
+        setOriginalSize(resize.size)
+        resize.setSize({ width: resize.size.width, height: TITLE_BAR_HEIGHT })
+        setIsMinimized(true)
+      }
     }
-  }, [isMinimized, originalSize, resize])
+  }, [isMinimized, originalSize, resize, onMinimize])
 
   // Initialize window after mount (client-side only)
   useEffect(() => {

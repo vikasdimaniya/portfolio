@@ -6,12 +6,13 @@ import Window, { WindowRef } from "./Window"
 interface CertificationsProps {
   defaultPosition: { x: number; y: number }
   onClose?: () => void
+  onMinimize?: () => void
 }
 
 const Certifications = forwardRef<WindowRef, CertificationsProps>(
-  ({ defaultPosition, onClose }, ref) => {
+  ({ defaultPosition, onClose, onMinimize }, ref) => {
     return (
-      <Window ref={ref} title="certifications.exe" defaultPosition={defaultPosition} variant="light" onClose={onClose}>
+      <Window ref={ref} title="certifications.exe" defaultPosition={defaultPosition} variant="light" onClose={onClose} onMinimize={onMinimize}>
         <div className="space-y-6">
           <div className="text-center mb-6">
             <h2 className="text-lg font-bold text-gray-800">Professional Certifications</h2>

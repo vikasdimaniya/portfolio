@@ -22,10 +22,11 @@ function DetailWindow({ title, onClose, defaultPosition, children }: DetailWindo
 interface ExperienceProps {
   defaultPosition: { x: number; y: number }
   onClose?: () => void
+  onMinimize?: () => void
 }
 
 const Experience = forwardRef<WindowRef, ExperienceProps>(
-  ({ defaultPosition, onClose }, ref) => {
+  ({ defaultPosition, onClose, onMinimize }, ref) => {
     const [openDetails, setOpenDetails] = useState<string[]>([])
     const [windowWidth, setWindowWidth] = useState(0)
 
@@ -47,7 +48,7 @@ const Experience = forwardRef<WindowRef, ExperienceProps>(
 
     return (
       <>
-        <Window ref={ref} title="experience.exe" defaultPosition={defaultPosition} variant="dark" onClose={onClose}>
+        <Window ref={ref} title="experience.exe" defaultPosition={defaultPosition} variant="dark" onClose={onClose} onMinimize={onMinimize}>
           <div className="h-full overflow-y-auto pr-4">
             <div className="space-y-8">
               <div className="relative">

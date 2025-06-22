@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef } from "react"
 import TopMenu from "@/components/TopMenu"
 import Hero from "@/components/Hero"
 import Experience from "@/components/Experience"
@@ -11,7 +11,8 @@ import Links from "@/components/Links"
 import Certifications from "@/components/Certifications"
 import { WindowRef } from "@/components/Window"
 
-// Widget Components
+// Widget Components (unused but kept for reference)
+/*
 const GitHubWidget = () => (
   <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 shadow-lg">
     <div className="flex items-center justify-between mb-3">
@@ -39,8 +40,6 @@ const GitHubWidget = () => (
   </div>
 )
 
-
-
 const CalendarWidget = () => {
   const today = new Date()
   const dayName = today.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase()
@@ -56,10 +55,6 @@ const CalendarWidget = () => {
     </div>
   )
 }
-
-
-
-
 
 const TimeWidget = () => {
   const [time, setTime] = useState(new Date())
@@ -101,14 +96,23 @@ const ProjectsStatsWidget = () => (
     </div>
   </div>
 )
+*/
 
 export default function Home() {
   const [openWindows, setOpenWindows] = useState<string[]>(["hero"])
+  const [minimizedWindows, setMinimizedWindows] = useState<string[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const windowRefs = useRef<Record<string, WindowRef | null>>({})
 
   const handleMenuClick = (section: string) => {
-    if (openWindows.includes(section)) {
+    if (minimizedWindows.includes(section)) {
+      // Window is minimized, restore it
+      setMinimizedWindows(minimizedWindows.filter(window => window !== section))
+      const windowRef = windowRefs.current[section]
+      if (windowRef && windowRef.bringToFront) {
+        windowRef.bringToFront()
+      }
+    } else if (openWindows.includes(section)) {
       // Window is already open, bring it to front
       const windowRef = windowRefs.current[section]
       if (windowRef && windowRef.bringToFront) {
@@ -122,9 +126,16 @@ export default function Home() {
 
   const handleCloseWindow = (section: string) => {
     setOpenWindows(openWindows.filter(window => window !== section))
+    setMinimizedWindows(minimizedWindows.filter(window => window !== section))
     // Clean up the ref
     if (windowRefs.current[section]) {
       windowRefs.current[section] = null
+    }
+  }
+
+  const handleMinimizeWindow = (section: string) => {
+    if (!minimizedWindows.includes(section)) {
+      setMinimizedWindows([...minimizedWindows, section])
     }
   }
 
@@ -299,7 +310,7 @@ export default function Home() {
             <div className="w-px h-8 bg-white/20 mx-1"></div>
 
             {/* Open Windows */}
-            {openWindows.map((window, index) => {
+            {openWindows.map((window) => {
               const windowIcons = {
                 hero: { icon: "👋", color: "from-purple-400 to-purple-600", label: "About" },
                 about: { icon: "👋", color: "from-purple-400 to-purple-600", label: "About" },
@@ -314,20 +325,26 @@ export default function Home() {
               const windowData = windowIcons[window as keyof typeof windowIcons]
               if (!windowData) return null
 
+              const isMinimized = minimizedWindows.includes(window)
+
               return (
                 <div key={window} className="relative group">
                   <div 
-                    className={`w-12 h-12 bg-gradient-to-b ${windowData.color} rounded-xl flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition-transform duration-200 relative`}
+                    className={`w-12 h-12 bg-gradient-to-b ${windowData.color} rounded-xl flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition-transform duration-200 relative ${isMinimized ? 'opacity-60' : ''}`}
                     onClick={() => handleMenuClick(window)}
                   >
                     <span className="text-xl">{windowData.icon}</span>
-                    {/* Active indicator dot */}
-                    <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-white rounded-full"></div>
+                    {/* Active indicator dot - different for minimized */}
+                    {isMinimized ? (
+                      <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-0.5 bg-white rounded-full"></div>
+                    ) : (
+                      <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-white rounded-full"></div>
+                    )}
                   </div>
                   
                   {/* Tooltip */}
                   <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 bg-gray-900/90 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                    {windowData.label}
+                    {windowData.label} {isMinimized ? '(Minimized)' : ''}
                   </div>
                 </div>
               )
@@ -348,66 +365,74 @@ export default function Home() {
 
       {/* Windows - Interactive Layer */}
       <div className="relative z-30">
-        {openWindows.includes("hero") && (
+        {openWindows.includes("hero") && !minimizedWindows.includes("hero") && (
           <Hero 
             onClose={() => handleCloseWindow("hero")}
+            onMinimize={() => handleMinimizeWindow("hero")}
             ref={(ref) => { windowRefs.current["hero"] = ref }}
           />
         )}
         
-        {openWindows.includes("about") && (
+        {openWindows.includes("about") && !minimizedWindows.includes("about") && (
           <Hero 
             onClose={() => handleCloseWindow("about")}
+            onMinimize={() => handleMinimizeWindow("about")}
             ref={(ref) => { windowRefs.current["about"] = ref }}
           />
         )}
         
-        {openWindows.includes("experience") && (
+        {openWindows.includes("experience") && !minimizedWindows.includes("experience") && (
           <Experience 
             defaultPosition={getWindowPosition(openWindows.indexOf("experience"))}
             onClose={() => handleCloseWindow("experience")}
+            onMinimize={() => handleMinimizeWindow("experience")}
             ref={(ref) => { windowRefs.current["experience"] = ref }}
           />
         )}
         
-        {openWindows.includes("education") && (
+        {openWindows.includes("education") && !minimizedWindows.includes("education") && (
           <Education 
             defaultPosition={getWindowPosition(openWindows.indexOf("education"))}
             onClose={() => handleCloseWindow("education")}
+            onMinimize={() => handleMinimizeWindow("education")}
             ref={(ref) => { windowRefs.current["education"] = ref }}
           />
         )}
         
-        {openWindows.includes("projects") && (
+        {openWindows.includes("projects") && !minimizedWindows.includes("projects") && (
           <Projects 
             defaultPosition={getWindowPosition(openWindows.indexOf("projects"))}
             selectedCategory={selectedCategory}
             onClearFilter={() => setSelectedCategory(null)}
             onClose={() => handleCloseWindow("projects")}
+            onMinimize={() => handleMinimizeWindow("projects")}
             ref={(ref) => { windowRefs.current["projects"] = ref }}
           />
         )}
         
-        {openWindows.includes("skills") && (
+        {openWindows.includes("skills") && !minimizedWindows.includes("skills") && (
           <Skills 
             defaultPosition={getWindowPosition(openWindows.indexOf("skills"))}
             onClose={() => handleCloseWindow("skills")}
+            onMinimize={() => handleMinimizeWindow("skills")}
             ref={(ref) => { windowRefs.current["skills"] = ref }}
           />
         )}
         
-        {openWindows.includes("links") && (
+        {openWindows.includes("links") && !minimizedWindows.includes("links") && (
           <Links 
             defaultPosition={getWindowPosition(openWindows.indexOf("links"))}
             onClose={() => handleCloseWindow("links")}
+            onMinimize={() => handleMinimizeWindow("links")}
             ref={(ref) => { windowRefs.current["links"] = ref }}
           />
         )}
         
-        {openWindows.includes("certifications") && (
+        {openWindows.includes("certifications") && !minimizedWindows.includes("certifications") && (
           <Certifications 
             defaultPosition={getWindowPosition(openWindows.indexOf("certifications"))}
             onClose={() => handleCloseWindow("certifications")}
+            onMinimize={() => handleMinimizeWindow("certifications")}
             ref={(ref) => { windowRefs.current["certifications"] = ref }}
           />
         )}

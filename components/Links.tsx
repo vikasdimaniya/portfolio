@@ -7,12 +7,13 @@ import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa"
 interface LinksProps {
   defaultPosition: { x: number; y: number }
   onClose?: () => void
+  onMinimize?: () => void
 }
 
 const Links = forwardRef<WindowRef, LinksProps>(
-  ({ defaultPosition, onClose }, ref) => {
+  ({ defaultPosition, onClose, onMinimize }, ref) => {
   return (
-      <Window ref={ref} title="links.exe" defaultPosition={defaultPosition} variant="dark" autoSize={true} maxWidth={300} minWidth={200} onClose={onClose}>
+      <Window ref={ref} title="links.exe" defaultPosition={defaultPosition} variant="dark" autoSize={true} maxWidth={300} minWidth={200} onClose={onClose} onMinimize={onMinimize}>
       <div className="space-y-4">
         <h2 className="text-lg font-bold mb-4">My Links</h2>
         <div className="space-y-2">
