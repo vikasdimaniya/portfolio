@@ -214,8 +214,7 @@ const Window = forwardRef<WindowRef, WindowProps>(({
     <div
       ref={nodeRef}
       className={cn(
-        "window font-sans border border-black select-none",
-        variant === "dark" ? "bg-black text-white" : "bg-white text-black",
+        "window font-sans select-none rounded-xl overflow-hidden",
         !isInitialized ? "opacity-0" : "opacity-100 transition-opacity duration-200",
         className,
       )}
@@ -227,8 +226,15 @@ const Window = forwardRef<WindowRef, WindowProps>(({
         width: `${currentSize.width}px`,
         height: `${currentSize.height}px`,
         cursor: drag.isDragging ? "grabbing" : "default",
-        imageRendering: "pixelated",
-        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)",
+        background: variant === "dark" 
+          ? 'linear-gradient(to bottom, rgba(30, 30, 30, 0.6), rgba(20, 20, 20, 0.55))'
+          : 'linear-gradient(to bottom, rgba(255, 255, 255, 0.6), rgba(245, 245, 245, 0.55))',
+        backdropFilter: 'blur(60px) saturate(200%)',
+        WebkitBackdropFilter: 'blur(60px) saturate(200%)',
+        border: variant === "dark" 
+          ? '1px solid rgba(255, 255, 255, 0.15)' 
+          : '1px solid rgba(0, 0, 0, 0.15)',
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 0.5px rgba(255, 255, 255, 0.2) inset',
       }}
       onMouseDown={drag.handleMouseDown}
       onClick={bringToFront}
@@ -246,15 +252,20 @@ const Window = forwardRef<WindowRef, WindowProps>(({
         <div
           ref={contentRef}
         className={cn(
-            "p-4 select-text",
-          variant === "dark" ? "bg-black text-white" : "bg-white text-black",
+            "p-4 select-text mx-2 mb-2 rounded-lg",
+          variant === "dark" ? "text-white dark-scrollbar" : "text-black light-scrollbar",
         )}
           style={{ 
-            height: `calc(100% - ${TITLE_BAR_HEIGHT}px)`, 
-            overflow: "auto", // Always use auto to prevent overflow
+            height: `calc(100% - ${TITLE_BAR_HEIGHT}px - 8px)`, 
+            overflow: "auto",
             wordWrap: "break-word",
             overflowWrap: "break-word",
-            hyphens: "auto"
+            hyphens: "auto",
+            background: variant === "dark"
+              ? 'rgba(40, 40, 40, 0.92)'
+              : 'rgba(255, 255, 255, 0.92)',
+            backdropFilter: 'blur(30px)',
+            WebkitBackdropFilter: 'blur(30px)',
           }}
       >
         {children}
