@@ -134,7 +134,7 @@ export default function TopMenu({ onMenuClick, onCategoryFilter }: TopMenuProps)
 
   return (
     <>
-      <div className="fixed top-0 left-0 right-0 bg-gray-800/95 backdrop-blur-xl text-white px-4 py-1.5 flex justify-between items-center z-50 font-sans border-b border-gray-600/20 shadow-sm">
+      <div className="fixed top-0 left-0 right-0 bg-black/20 backdrop-blur-md text-white px-4 py-1.5 flex justify-between items-center z-50 font-sans border-b border-white/10 shadow-sm">
         <div className="flex items-center gap-6">
           <span className="text-base font-semibold tracking-wide">VIKAS</span>
           <nav className="flex gap-1">

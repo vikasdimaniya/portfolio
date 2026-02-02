@@ -145,22 +145,14 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-purple-600 relative overflow-hidden">
-      {/* Animated background pattern */}
+    <div className="h-screen w-screen fixed inset-0 overflow-hidden">
+      {/* Wallpaper Background */}
       <div 
-        className="absolute inset-0 opacity-10"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `
-            radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0)
-          `,
-          backgroundSize: '20px 20px'
+          backgroundImage: `url('/wallpaper.jpg')`
         }}
       />
-      
-      {/* Floating orbs for depth */}
-      <div className="absolute top-20 left-20 w-32 h-32 bg-white/5 rounded-full blur-xl"></div>
-      <div className="absolute top-40 right-32 w-24 h-24 bg-purple-300/10 rounded-full blur-lg"></div>
-      <div className="absolute bottom-32 left-1/3 w-40 h-40 bg-blue-300/5 rounded-full blur-2xl"></div>
       
       {/* Widget Grid - Right Side Layout */}
       <div className="absolute top-16 right-4 w-72 pointer-events-none">
@@ -297,7 +289,12 @@ export default function Home() {
       
       {/* Dock - macOS Style */}
       <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50">
-        <div className="bg-white/10 backdrop-blur-2xl rounded-2xl border border-white/20 shadow-2xl px-3 py-2">
+        <div className="bg-white/5 backdrop-blur-3xl rounded-2xl border border-white/30 shadow-2xl px-3 py-2" style={{
+          background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05))',
+          backdropFilter: 'blur(40px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
+        }}>
           <div className="flex items-center gap-1">
             {/* Finder Icon */}
             <div className="w-12 h-12 bg-gradient-to-b from-blue-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition-transform duration-200">
