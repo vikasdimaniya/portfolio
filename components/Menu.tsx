@@ -22,7 +22,7 @@ export default function Menu() {
       icon: <User className="w-4 h-4" />,
       content: (
         <div className="space-y-4">
-          <h2 className="text-lg">Software Engineer | AI Enthusiast</h2>
+          <h2 className="text-lg">AI Software Engineer</h2>
           <p>Available for 4 or 8 month internship starting in May 2025.</p>
         </div>
       ),

@@ -242,7 +242,7 @@ export default function Home() {
           
           {/* Main title */}
           <h1 className="text-6xl font-bold text-white mb-12 tracking-wider drop-shadow-lg">
-            SOFTWARE<br/>ENGINEER
+            AI SOFTWARE<br/>ENGINEER
           </h1>
           
           {/* Skill badges */}

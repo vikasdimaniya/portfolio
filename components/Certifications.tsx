@@ -16,13 +16,66 @@ const Certifications = forwardRef<WindowRef, CertificationsProps>(
         <div className="space-y-6">
           <div className="text-center mb-6">
             <h2 className="text-lg font-bold text-gray-800">Professional Certifications</h2>
-            <p className="text-xs text-gray-600">15+ certifications across AI, ML, programming, and leadership</p>
+            <p className="text-xs text-gray-600">18+ certifications across AI, ML, programming, and leadership</p>
           </div>
 
           {/* LinkedIn Learning Certifications */}
           <div className="space-y-4">
             <h3 className="text-sm font-bold text-blue-600 border-b border-blue-200 pb-2">📚 LinkedIn Learning</h3>
             
+            {/* LangGraph Essentials */}
+            <div className="border-l-4 border-purple-500 pl-4 space-y-2">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-purple-600 rounded flex items-center justify-center text-white font-bold text-xs">
+                  🔗
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold">
+                    <span className="text-purple-600">LangGraph Essentials</span>
+                  </h4>
+                  <p className="text-xs text-gray-500">LangChain</p>
+                  <p className="text-xs text-gray-500">Issued Jan 2026</p>
+                  <p className="text-xs text-gray-600"><strong>Credential ID:</strong> dp1rzhlilo</p>
+                  <p className="text-xs text-gray-600"><strong>Skills:</strong> LangGraph</p>
+                </div>
+              </div>
+            </div>
+
+            {/* LangChain Essentials */}
+            <div className="border-l-4 border-purple-500 pl-4 space-y-2">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-purple-600 rounded flex items-center justify-center text-white font-bold text-xs">
+                  🔗
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold">
+                    <span className="text-purple-600">LangChain Essentials</span>
+                  </h4>
+                  <p className="text-xs text-gray-500">LangChain</p>
+                  <p className="text-xs text-gray-500">Issued Dec 2025</p>
+                  <p className="text-xs text-gray-600"><strong>Credential ID:</strong> twbhbmwqv8</p>
+                  <p className="text-xs text-gray-600"><strong>Skills:</strong> LangChain</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Build AI Agents and Automate Workflows with n8n */}
+            <div className="border-l-4 border-blue-500 pl-4 space-y-2">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center text-white font-bold text-xs">
+                  LI
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold">
+                    <span className="text-blue-600">Build AI Agents and Automate Workflows with n8n</span>
+                  </h4>
+                  <p className="text-xs text-gray-500">LinkedIn</p>
+                  <p className="text-xs text-gray-500">Issued Aug 2025</p>
+                  <p className="text-xs text-gray-600"><strong>Skills:</strong> AI Productivity</p>
+                </div>
+              </div>
+            </div>
+
             {/* Agentic AI Certification */}
             <div className="border-l-4 border-blue-500 pl-4 space-y-2">
               <div className="flex items-start gap-3">

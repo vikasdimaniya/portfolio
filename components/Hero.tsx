@@ -31,13 +31,13 @@ const Hero = forwardRef<WindowRef, HeroProps>(({ onClose, onMinimize }, ref) => 
         <div className="text-xs text-gray-700 leading-relaxed">
           <p>I am skilled in Python, Node.js, MongoDB, JS, Java, System design, cloud, and figuring out technology.</p>
           <br />
-          <p><strong>AI/ML:</strong> PyTorch, Scikit-learn, LLMs, OpenCV</p>
+          <p><strong>AI/ML:</strong> PyTorch, Scikit-learn, LLMs, LangChain, LangGraph, LangSmith, OpenCV</p>
           <p><strong>Frameworks:</strong> Python (DJANGO, FASTAPI), Node.js (Express, Fastify)</p>
-          <p><strong>Databases:</strong> MongoDB, PostgreSQL, MYSQL, MS-SQL</p>
+          <p><strong>Databases:</strong> MongoDB, PostgreSQL, Pinecone, MYSQL, MS-SQL, ClickHouse</p>
           <p><strong>Dev Tools:</strong> GitHub, Docker, Kubernetes, CI/CD, JIRA</p>
         </div>
         <div className="grid gap-4">
-          <a href="mailto:kumar3s@uwindsor.ca" className="pixel-button flex items-center gap-2">
+          <a href="mailto:vikaskumar6399@gmail.com" className="pixel-button flex items-center gap-2">
             <FaEnvelope /> EMAIL ME
           </a>
           <a

@@ -55,16 +55,16 @@ const Experience = forwardRef<WindowRef, ExperienceProps>(
                 {/* Timeline */}
                 <div className="absolute left-24 top-0 bottom-0 border-l-2 border-dotted border-gray-400"></div>
 
-                {/* CPG Recruitment Inc. - Data Scientist */}
+                {/* CPG Recruitment Inc. - AI Software Developer */}
                 <div className="relative flex gap-8">
-                  <div className="w-24 text-xs text-gray-400 pt-1">May 2025 - Present</div>
+                  <div className="w-24 text-xs text-gray-400 pt-1">Sept 2025 - Present</div>
                   <div className="flex-1 space-y-3">
                     <div className="flex gap-4 items-start">
                       <div className="w-12 h-12 bg-blue-700 rounded-lg border-2 border-gray-200 flex items-center justify-center text-white font-bold text-sm">
                         CPG
                       </div>
                       <div>
-                        <h3 className="text-sm font-bold">Data Scientist</h3>
+                        <h3 className="text-sm font-bold">AI Software Developer</h3>
                         <p className="text-xs">
                           <a 
                             href="https://www.cpgincorporated.com/" 
@@ -75,11 +75,14 @@ const Experience = forwardRef<WindowRef, ExperienceProps>(
                             CPG Recruitment Inc.
                           </a> · Co-op
                         </p>
-                        <p className="text-xs text-gray-400">2 mos</p>
+                        <p className="text-xs text-gray-400">5 mos</p>
                       </div>
                     </div>
                     <p className="text-xs text-gray-400">
-                      Machine Learning, Large Language Models (LLM) and +3 skills
+                      Transforming CPG into a Tech-first company. Enabling sales and recruitment AI business transformation.
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      AI Strategy, Technical Leadership, System Architecture and +5 skills
                     </p>
                     <button onClick={() => toggleDetails("cpg")} className="text-xs text-blue-400 hover:underline">
                       See more...
@@ -245,17 +248,26 @@ const Experience = forwardRef<WindowRef, ExperienceProps>(
           >
             <div className="space-y-4">
               <div>
-                <h3 className="text-sm font-bold">Data Scientist</h3>
+                <h3 className="text-sm font-bold">AI Software Developer</h3>
                 <p className="text-xs text-gray-400">CPG Recruitment Inc. · Co-op</p>
-                <p className="text-xs text-gray-400">May 2025 - Present · 2 mos</p>
+                <p className="text-xs text-gray-400">Sept 2025 - Present · 5 mos</p>
                 <p className="text-xs italic text-gray-400">
-                  Skills: Machine Learning, Large Language Models (LLM)
+                  Skills: AI Strategy, Technical Leadership, System Architecture, Cloud Infrastructure, Team Management
                 </p>
               </div>
+              <p className="text-xs text-gray-400 italic">
+                Transforming CPG into a Tech-first company. Enabling sales and recruitment AI business transformation.
+              </p>
               <ul className="list-disc pl-5 text-xs space-y-2 text-gray-200">
-                <li>Working on advanced machine learning projects and LLM implementations</li>
-                <li>Developing AI-powered solutions for recruitment and talent acquisition</li>
-                <li>Applying data science techniques to improve hiring processes</li>
+                <li>Leading the technical vision and strategy to transform CPG into a technology-driven organization</li>
+                <li>Enabling AI-driven business transformation across sales and recruitment operations</li>
+                <li>Architecting and implementing scalable AI-powered systems for recruitment and talent acquisition</li>
+                <li>Establishing technology roadmap and driving innovation initiatives across the organization</li>
+                <li>Evaluating and integrating cutting-edge technologies including LLMs, machine learning, and automation tools</li>
+                <li>Designing enterprise-grade system architecture with focus on security, scalability, and performance</li>
+                <li>Managing cloud infrastructure and DevOps practices to ensure reliable and efficient operations</li>
+                <li>Collaborating with executive leadership to align technology initiatives with business objectives</li>
+                <li>Implementing data-driven decision-making processes and analytics frameworks</li>
               </ul>
             </div>
           </DetailWindow>

@@ -36,7 +36,7 @@ const Links = forwardRef<WindowRef, LinksProps>(
             <span>LinkedIn</span>
           </a>
           <a
-            href="mailto:kumar3s@uwindsor.ca"
+            href="mailto:vikaskumar6399@gmail.com"
             className="flex items-center space-x-2 text-blue-400 hover:text-blue-300"
           >
             <FaEnvelope />
