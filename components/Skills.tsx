@@ -39,6 +39,17 @@ const Skills = forwardRef<WindowRef, SkillsProps>(
             </div>
 
             <div className="space-y-2">
+              <h3 className="text-sm font-bold">🔗 Agentic AI</h3>
+              <div className="flex flex-wrap gap-2">
+                {["LangChain", "LangGraph", "LangSmith", "n8n"].map((skill) => (
+                  <span key={skill} className="bg-indigo-100 text-indigo-800 px-2 py-1 text-xs border">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
               <h3 className="text-sm font-bold">💻 Programming Languages</h3>
               <div className="flex flex-wrap gap-2">
                 {["Python", "JavaScript", "Java", "Node.js", "C++", "SQL"].map((skill) => (

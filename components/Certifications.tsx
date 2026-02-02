@@ -31,9 +31,16 @@ const Certifications = forwardRef<WindowRef, CertificationsProps>(
                 </div>
                 <div>
                   <h4 className="text-xs font-bold">
-                    <span className="text-purple-600">LangGraph Essentials</span>
+                    <a 
+                      href="https://academy.langchain.com/certificates/dp1rzhlilo"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-purple-600 hover:underline"
+                    >
+                      LangGraph Essentials
+                    </a>
                   </h4>
-                  <p className="text-xs text-gray-500">LangChain</p>
+                  <p className="text-xs text-gray-500">LangChain Academy</p>
                   <p className="text-xs text-gray-500">Issued Jan 2026</p>
                   <p className="text-xs text-gray-600"><strong>Credential ID:</strong> dp1rzhlilo</p>
                   <p className="text-xs text-gray-600"><strong>Skills:</strong> LangGraph</p>
@@ -49,9 +56,16 @@ const Certifications = forwardRef<WindowRef, CertificationsProps>(
                 </div>
                 <div>
                   <h4 className="text-xs font-bold">
-                    <span className="text-purple-600">LangChain Essentials</span>
+                    <a 
+                      href="https://academy.langchain.com/certificates/twbhbmwqv8"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-purple-600 hover:underline"
+                    >
+                      LangChain Essentials
+                    </a>
                   </h4>
-                  <p className="text-xs text-gray-500">LangChain</p>
+                  <p className="text-xs text-gray-500">LangChain Academy</p>
                   <p className="text-xs text-gray-500">Issued Dec 2025</p>
                   <p className="text-xs text-gray-600"><strong>Credential ID:</strong> twbhbmwqv8</p>
                   <p className="text-xs text-gray-600"><strong>Skills:</strong> LangChain</p>
@@ -67,11 +81,18 @@ const Certifications = forwardRef<WindowRef, CertificationsProps>(
                 </div>
                 <div>
                   <h4 className="text-xs font-bold">
-                    <span className="text-blue-600">Build AI Agents and Automate Workflows with n8n</span>
+                    <a 
+                      href="https://www.linkedin.com/learning/certificates/a2d6697fde547b68e9ae0f5432cf69b2eae327acf991d34e7892eea5c1f5b659"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline"
+                    >
+                      Build AI Agents and Automate Workflows with n8n
+                    </a>
                   </h4>
                   <p className="text-xs text-gray-500">LinkedIn</p>
                   <p className="text-xs text-gray-500">Issued Aug 2025</p>
-                  <p className="text-xs text-gray-600"><strong>Skills:</strong> AI Productivity</p>
+                  <p className="text-xs text-gray-600"><strong>Skills:</strong> AI Productivity, AI Agents</p>
                 </div>
               </div>
             </div>
@@ -109,7 +130,7 @@ const Certifications = forwardRef<WindowRef, CertificationsProps>(
                 <div>
                   <h4 className="text-xs font-bold">
                     <a 
-                      href="https://www.linkedin.com/learning/certificates/4efca013085bca44753a3e84873e4fc89d3c1d9fd14ea34e5025120075e80b11?u=56973065"
+                      href="https://www.linkedin.com/learning/certificates/4efca013085bca44753a3e84873e4fc89d3c1d9fd14ea34e5025120075e80b11"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-600 hover:underline"

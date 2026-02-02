@@ -24,83 +24,34 @@ export default function TopMenu({ onMenuClick, onCategoryFilter }: TopMenuProps)
   const menuItems: MenuItem[] = [
     {
       label: "About",
-      action: "about",
+      action: "hero",
       items: [
-        { label: "Hero Section", action: "about" },
-        { label: "Personal Info", action: "about" },
-        { separator: true, label: "", action: "" },
-        { label: "Contact", action: "links" }
+        { label: "Profile", action: "hero" },
+        { label: "Contact & Links", action: "links" }
       ]
     },
     {
-      label: "Experience",
+      label: "Professional",
       action: "experience",
       items: [
-        { label: "Work History", action: "experience" },
-        { label: "Professional Skills", action: "skills" },
+        { label: "Work Experience", action: "experience" },
+        { label: "Education", action: "education" },
+        { label: "Certifications", action: "certifications" },
         { separator: true, label: "", action: "" },
-        { label: "Projects", action: "projects" }
-      ]
-    },
-    {
-      label: "Education",
-      action: "education",
-      items: [
-        { label: "Academic Background", action: "education" },
-        { label: "Degrees & Universities", action: "education" },
-        { separator: true, label: "", action: "" },
-        { label: "Certifications", action: "certifications" }
-      ]
-    },
-    {
-      label: "Certifications",
-      action: "certifications",
-      items: [
-        { label: "All Certifications", action: "certifications" },
-        { label: "LinkedIn Learning", action: "certifications" },
-        { label: "HackerRank", action: "certifications" },
-        { label: "Kaggle", action: "certifications" },
-        { separator: true, label: "", action: "" },
-        { label: "Skills Acquired", action: "skills" }
+        { label: "Technical Skills", action: "skills" }
       ]
     },
     {
       label: "Projects",
       action: "projects",
       items: [
-        { label: "All Projects", action: "projects" },
-        { label: "Featured Work", action: "projects" },
+        { label: "All Projects", action: "category-all" },
         { separator: true, label: "", action: "" },
-        { label: "Categories", action: "category-all" },
         { label: "🤖 AI & Machine Learning", action: "category-ai" },
         { label: "👁️ Computer Vision & Deep Learning", action: "category-cv" },
         { label: "🌐 Web Development & Full-Stack", action: "category-web" },
         { label: "📊 Business Analysis & Case Studies", action: "category-business" },
-        { label: "🎮 Gaming & Simulation", action: "category-gaming" },
-        { separator: true, label: "", action: "" },
-        { label: "Technologies Used", action: "skills" }
-      ]
-    },
-    {
-      label: "Skills",
-      action: "skills",
-      items: [
-        { label: "Technical Skills", action: "skills" },
-        { label: "Programming Languages", action: "skills" },
-        { label: "Frameworks & Tools", action: "skills" },
-        { separator: true, label: "", action: "" },
-        { label: "Certifications", action: "certifications" }
-      ]
-    },
-    {
-      label: "Links",
-      action: "links",
-      items: [
-        { label: "Social Media", action: "links" },
-        { label: "Professional Profiles", action: "links" },
-        { separator: true, label: "", action: "" },
-        { label: "Resume Download", action: "links" },
-        { label: "Contact Information", action: "links" }
+        { label: "🎮 Gaming & Simulation", action: "category-gaming" }
       ]
     }
   ]

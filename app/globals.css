@@ -190,4 +190,30 @@
     max-width: 100%;
     height: auto;
   }
+
+  /* Custom scrollbar for dark windows */
+  .dark-scrollbar::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  .dark-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+  }
+
+  .dark-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(100, 100, 100, 0.6);
+    border-radius: 6px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+  }
+
+  .dark-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(120, 120, 120, 0.8);
+  }
+
+  /* Firefox scrollbar styling for dark windows */
+  .dark-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(100, 100, 100, 0.6) rgba(0, 0, 0, 0.2);
+  }
 }

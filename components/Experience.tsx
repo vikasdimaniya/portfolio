@@ -14,7 +14,7 @@ interface DetailWindowProps {
 function DetailWindow({ title, onClose, defaultPosition, children }: DetailWindowProps) {
   return (
     <Window title={title} defaultPosition={defaultPosition} onClose={onClose} variant="dark">
-      <div className="h-full overflow-y-auto pr-4">{children}</div>
+      <div className="h-full overflow-y-auto pr-4 dark-scrollbar">{children}</div>
     </Window>
   )
 }
@@ -48,8 +48,19 @@ const Experience = forwardRef<WindowRef, ExperienceProps>(
 
     return (
       <>
-        <Window ref={ref} title="experience.exe" defaultPosition={defaultPosition} variant="dark" onClose={onClose} onMinimize={onMinimize}>
-          <div className="h-full overflow-y-auto pr-4">
+        <Window 
+          ref={ref} 
+          title="experience.exe" 
+          defaultPosition={defaultPosition} 
+          variant="dark" 
+          onClose={onClose} 
+          onMinimize={onMinimize}
+          maxWidth={1000}
+          maxHeight={800}
+          minWidth={600}
+          minHeight={400}
+        >
+          <div className="h-full overflow-y-auto pr-4 dark-scrollbar">
             <div className="space-y-8">
               <div className="relative">
                 {/* Timeline */}
