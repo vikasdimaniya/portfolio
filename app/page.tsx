@@ -299,48 +299,25 @@ export default function Home() {
           
           {/* Main title */}
           <h1 className="text-6xl font-bold text-white mb-12 tracking-wider drop-shadow-lg">
-            AI SOFTWARE<br/>ENGINEER
+            TECHNICAL<br/>CO-FOUNDER
           </h1>
           
-          {/* Skill badges */}
-          <div className="flex gap-6 justify-center">
-            <div className="glass-badge">
+          {/* Booked55 link */}
+          <a 
+            href="https://booked55.com" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="pointer-events-auto inline-block"
+          >
+            <div className="glass-badge hover:scale-105 transition-transform duration-200 cursor-pointer">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-                  <div className="w-4 h-4 rounded-full bg-white/60"></div>
+                  <span className="text-white font-bold text-sm">B</span>
                 </div>
-                <span className="text-white font-semibold">AI</span>
+                <span className="text-white font-semibold">Booked55</span>
               </div>
             </div>
-            
-            <div className="glass-badge">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 flex items-center justify-center">
-                  <div className="flex gap-1">
-                    <div className="w-1 h-6 bg-white/60 rounded-sm"></div>
-                    <div className="w-1 h-4 bg-white/60 rounded-sm mt-2"></div>
-                    <div className="w-1 h-5 bg-white/60 rounded-sm mt-1"></div>
-                  </div>
-                </div>
-                <div className="text-white font-semibold">
-                  <div>Data</div>
-                  <div className="text-sm opacity-80">Science</div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="glass-badge">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-                  <div className="w-4 h-4 rounded-full border-2 border-white/60"></div>
-                </div>
-                <div className="text-white font-semibold">
-                  <div>AI</div>
-                  <div className="text-sm opacity-80">Training</div>
-                </div>
-              </div>
-            </div>
-          </div>
+          </a>
         </div>
       </div>
       

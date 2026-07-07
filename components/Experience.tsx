@@ -66,8 +66,43 @@ const Experience = forwardRef<WindowRef, ExperienceProps>(
                 {/* Timeline */}
                 <div className="absolute left-24 top-0 bottom-0 border-l-2 border-dotted border-gray-400"></div>
 
-                {/* CPG Recruitment Inc. - AI Software Developer */}
+                {/* Booked55 - Co-Founder */}
                 <div className="relative flex gap-8">
+                  <div className="w-24 text-xs text-gray-400 pt-1">Sep 2025 - Present</div>
+                  <div className="flex-1 space-y-3">
+                    <div className="flex gap-4 items-start">
+                      <div className="w-12 h-12 bg-indigo-600 rounded-lg border-2 border-gray-200 flex items-center justify-center text-white font-bold text-lg">
+                        B
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-bold">Co-Founder</h3>
+                        <p className="text-xs">
+                          <a 
+                            href="https://booked55.com" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-blue-400 hover:underline"
+                          >
+                            Booked55
+                          </a> · Permanent Full-time
+                        </p>
+                        <p className="text-xs text-gray-400">11 mos</p>
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-400">
+                      You focus on people. Booked55 handles the rest. A smart CRM built just for founders like you.
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      CRM, SaaS, Product Development and +3 skills
+                    </p>
+                    <button onClick={() => toggleDetails("booked55")} className="text-xs text-blue-400 hover:underline">
+                      See more...
+                    </button>
+                  </div>
+                </div>
+
+                {/* CPG Recruitment Inc. - AI Software Developer */}
+                <div className="relative flex gap-8 mt-12">
                   <div className="w-24 text-xs text-gray-400 pt-1">Sept 2025 - Present</div>
                   <div className="flex-1 space-y-3">
                     <div className="flex gap-4 items-start">
@@ -251,6 +286,35 @@ const Experience = forwardRef<WindowRef, ExperienceProps>(
         </Window>
 
         {/* Detail Windows */}
+        {openDetails.includes("booked55") && (
+          <DetailWindow
+            title="booked55-details.txt"
+            onClose={() => toggleDetails("booked55")}
+            defaultPosition={detailPosition}
+          >
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-sm font-bold">Co-Founder</h3>
+                <p className="text-xs text-gray-400">Booked55 · Permanent Full-time</p>
+                <p className="text-xs text-gray-400">Sep 2025 - Present · 11 mos</p>
+                <p className="text-xs italic text-gray-400">
+                  Skills: CRM, SaaS, Product Development, Full-Stack Engineering, Leadership
+                </p>
+              </div>
+              <p className="text-xs text-gray-400 italic">
+                You focus on people. Booked55 handles the rest. A smart CRM built just for founders like you.
+              </p>
+              <ul className="list-disc pl-5 text-xs space-y-2 text-gray-200">
+                <li>Co-founded Booked55, a smart CRM platform purpose-built for founders</li>
+                <li>Leading technical architecture and product development from the ground up</li>
+                <li>Designing and building scalable SaaS infrastructure for CRM workflows</li>
+                <li>Driving product strategy and user experience decisions</li>
+                <li>Building features that automate relationship management for busy founders</li>
+              </ul>
+            </div>
+          </DetailWindow>
+        )}
+
         {openDetails.includes("cpg") && (
           <DetailWindow
             title="cpg-details.txt"
