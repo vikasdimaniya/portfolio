@@ -23,9 +23,7 @@ const Education = forwardRef<WindowRef, EducationProps>(
               <div className="w-24 text-xs text-gray-500 pt-1">May 2024 - Present</div>
               <div className="flex-1 space-y-3">
                 <div className="flex gap-4 items-start">
-                  <div className="w-12 h-12 bg-blue-600 rounded-lg border-2 border-gray-200 flex items-center justify-center text-white font-bold text-xs">
-                    UW
-                  </div>
+                  <img src="/uwindsor-logo.png" alt="University of Windsor" className="w-12 h-12 rounded-lg border-2 border-gray-200 object-cover" />
                   <div>
                     <h3 className="text-sm font-bold">Master of applied computing - AI, Computer Science</h3>
                     <p className="text-xs text-gray-500">University of Windsor</p>
@@ -46,9 +44,7 @@ const Education = forwardRef<WindowRef, EducationProps>(
               <div className="w-24 text-xs text-gray-500 pt-1">2016 - 2020</div>
               <div className="flex-1 space-y-3">
                 <div className="flex gap-4 items-start">
-                  <div className="w-12 h-12 bg-red-600 rounded-lg border-2 border-gray-200 flex items-center justify-center text-white font-bold text-xs">
-                    CU
-                  </div>
+                  <img src="/cu-logo.png" alt="Chandigarh University" className="w-12 h-12 rounded-lg border-2 border-gray-200 object-cover" />
                   <div>
                     <h3 className="text-sm font-bold">Bachelor of Engineering, Computer Science</h3>
                     <p className="text-xs text-gray-500">CHANDIGARH UNIVERSITY</p>

@@ -13,8 +13,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Vikas Kumar - AI Software Engineer",
-  description: "AI Software Engineer",
+  title: "Vikas Kumar - Technical Co-Founder",
+  description: "Technical Co-Founder, Booked55",
+  icons: {
+    icon: "/icon.png",
+  },
 };
 
 export default function RootLayout({

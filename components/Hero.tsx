@@ -24,9 +24,8 @@ const Hero = forwardRef<WindowRef, HeroProps>(({ onClose, onMinimize }, ref) => 
       <div className="space-y-6">
         <h1 className="text-2xl font-bold">VIKAS KUMAR</h1>
         <p className="text-sm text-gray-600">AGENTIC AI | MACHINE LEARNING | DATA SCIENCE</p>
-        <div className="text-xs text-gray-500 space-y-1">
+        <div className="text-xs text-gray-500">
           <p>Windsor, Ontario, Canada</p>
-          <p>479 connections</p>
         </div>
         <div className="text-xs text-gray-700 leading-relaxed">
           <p>I am skilled in Python, Node.js, MongoDB, JS, Java, System design, cloud, and figuring out technology.</p>

@@ -19,16 +19,54 @@ const Certifications = forwardRef<WindowRef, CertificationsProps>(
             <p className="text-xs text-gray-600">18+ certifications across AI, ML, programming, and leadership</p>
           </div>
 
-          {/* LinkedIn Learning Certifications */}
+          {/* AWS Certifications */}
           <div className="space-y-4">
-            <h3 className="text-sm font-bold text-blue-600 border-b border-blue-200 pb-2">📚 LinkedIn Learning</h3>
+            <h3 className="text-sm font-bold text-yellow-600 border-b border-yellow-200 pb-2">☁️ Amazon Web Services (AWS)</h3>
             
+            <div className="border-l-4 border-yellow-500 pl-4 space-y-2">
+              <div className="flex items-start gap-3">
+                <img src="/aws-logo.png" alt="AWS" className="w-8 h-8 rounded object-cover" />
+                <div>
+                  <h4 className="text-xs font-bold text-yellow-700">Amazon Elastic Kubernetes Service</h4>
+                  <p className="text-xs text-gray-500">Amazon Web Services (AWS)</p>
+                  <p className="text-xs text-gray-500">Issued Feb 2026</p>
+                  <p className="text-xs text-gray-600"><strong>Credential ID:</strong> d291018a-5692-4fed-87ec-010e7e3cb22f</p>
+                  <p className="text-xs text-gray-600"><strong>Skills:</strong> Amazon EKS, EKS, Kubernetes, AWS</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* LangChain Certifications */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-bold text-purple-600 border-b border-purple-200 pb-2">🔗 LangChain Academy</h3>
+            
+            {/* LangSmith Agent Builder */}
+            <div className="border-l-4 border-purple-500 pl-4 space-y-2">
+              <div className="flex items-start gap-3">
+                <img src="/langchain-logo.png" alt="LangChain" className="w-8 h-8 rounded object-cover" />
+                <div>
+                  <h4 className="text-xs font-bold">
+                    <a 
+                      href="https://academy.langchain.com/certificates/tzhr80smhr"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-purple-600 hover:underline"
+                    >
+                      Quickstart: LangSmith Agent Builder
+                    </a>
+                  </h4>
+                  <p className="text-xs text-gray-500">LangChain</p>
+                  <p className="text-xs text-gray-500">Issued Feb 2026</p>
+                  <p className="text-xs text-gray-600"><strong>Credential ID:</strong> tzhr80smhr</p>
+                </div>
+              </div>
+            </div>
+
             {/* LangGraph Essentials */}
             <div className="border-l-4 border-purple-500 pl-4 space-y-2">
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-purple-600 rounded flex items-center justify-center text-white font-bold text-xs">
-                  🔗
-                </div>
+                <img src="/langchain-logo.png" alt="LangChain" className="w-8 h-8 rounded object-cover" />
                 <div>
                   <h4 className="text-xs font-bold">
                     <a 
@@ -37,7 +75,7 @@ const Certifications = forwardRef<WindowRef, CertificationsProps>(
                       rel="noopener noreferrer"
                       className="text-purple-600 hover:underline"
                     >
-                      LangGraph Essentials
+                      Quickstart: LangGraph Essentials - TypeScript
                     </a>
                   </h4>
                   <p className="text-xs text-gray-500">LangChain Academy</p>
@@ -51,9 +89,7 @@ const Certifications = forwardRef<WindowRef, CertificationsProps>(
             {/* LangChain Essentials */}
             <div className="border-l-4 border-purple-500 pl-4 space-y-2">
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-purple-600 rounded flex items-center justify-center text-white font-bold text-xs">
-                  🔗
-                </div>
+                <img src="/langchain-logo.png" alt="LangChain" className="w-8 h-8 rounded object-cover" />
                 <div>
                   <h4 className="text-xs font-bold">
                     <a 
@@ -62,7 +98,7 @@ const Certifications = forwardRef<WindowRef, CertificationsProps>(
                       rel="noopener noreferrer"
                       className="text-purple-600 hover:underline"
                     >
-                      LangChain Essentials
+                      Quickstart: LangChain Essentials - TypeScript
                     </a>
                   </h4>
                   <p className="text-xs text-gray-500">LangChain Academy</p>
@@ -72,6 +108,11 @@ const Certifications = forwardRef<WindowRef, CertificationsProps>(
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* LinkedIn Learning Certifications */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-bold text-blue-600 border-b border-blue-200 pb-2">📚 LinkedIn Learning</h3>
 
             {/* Build AI Agents and Automate Workflows with n8n */}
             <div className="border-l-4 border-blue-500 pl-4 space-y-2">
@@ -221,9 +262,7 @@ const Certifications = forwardRef<WindowRef, CertificationsProps>(
             
             <div className="border-l-4 border-orange-500 pl-4 space-y-2">
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-orange-600 rounded flex items-center justify-center text-white font-bold text-xs">
-                  K
-                </div>
+                <img src="/kaggle-logo.png" alt="Kaggle" className="w-8 h-8 rounded object-contain bg-white" />
                 <div>
                   <h4 className="text-xs font-bold">
                     <a 
@@ -275,9 +314,7 @@ const Certifications = forwardRef<WindowRef, CertificationsProps>(
             ].map((cert, index) => (
               <div key={index} className="border-l-4 border-green-500 pl-4 space-y-2">
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-green-600 rounded flex items-center justify-center text-white font-bold text-xs">
-                    HR
-                  </div>
+                  <img src="/hackerrank-logo.png" alt="HackerRank" className="w-8 h-8 rounded object-cover" />
                   <div>
                     <h4 className="text-xs font-bold">
                       <a 
@@ -304,9 +341,7 @@ const Certifications = forwardRef<WindowRef, CertificationsProps>(
             
             <div className="border-l-4 border-purple-500 pl-4 space-y-2">
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-purple-600 rounded flex items-center justify-center text-white font-bold text-xs">
-                  TC
-                </div>
+                <img src="/tcilit-logo.png" alt="TCIL-IT" className="w-8 h-8 rounded object-contain bg-white" />
                 <div>
                   <h4 className="text-xs font-bold">Networking Technology</h4>
                   <p className="text-xs text-gray-500">TCIL-IT Chandigarh</p>

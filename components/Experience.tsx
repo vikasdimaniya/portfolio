@@ -104,9 +104,7 @@ const Experience = forwardRef<WindowRef, ExperienceProps>(
                   <div className="w-24 text-xs text-gray-400 pt-1">Sept 2025 - Present</div>
                   <div className="flex-1 space-y-3">
                     <div className="flex gap-4 items-start">
-                      <div className="w-12 h-12 bg-blue-700 rounded-lg border-2 border-gray-200 flex items-center justify-center text-white font-bold text-sm">
-                        CPG
-                      </div>
+                      <img src="/cpg-logo.png" alt="CPG Recruitment" className="w-12 h-12 rounded-lg object-cover" />
                       <div>
                         <h3 className="text-sm font-bold">AI Software Developer</h3>
                         <p className="text-xs">
@@ -139,9 +137,7 @@ const Experience = forwardRef<WindowRef, ExperienceProps>(
                   <div className="w-24 text-xs text-gray-400 pt-1">May 2023 - Present</div>
                   <div className="flex-1 space-y-3">
                     <div className="flex gap-4 items-start">
-                      <div className="w-12 h-12 bg-purple-600 rounded-lg border-2 border-gray-200 flex items-center justify-center text-white font-bold text-lg">
-                        A
-                      </div>
+                      <img src="/aqlio-logo.png" alt="Aqlio" className="w-12 h-12 rounded-lg border-2 border-gray-200 object-contain bg-white p-1" />
                       <div>
                         <h3 className="text-sm font-bold">Founder & AI Engineer</h3>
                         <p className="text-xs">
@@ -174,9 +170,7 @@ const Experience = forwardRef<WindowRef, ExperienceProps>(
                   <div className="w-24 text-xs text-gray-400 pt-1">Feb 2022 - Apr 2025</div>
                   <div className="flex-1 space-y-3">
                     <div className="flex gap-4 items-start">
-                      <div className="w-12 h-12 bg-green-600 rounded-lg border-2 border-gray-200 flex items-center justify-center text-white font-bold text-lg">
-                        G
-                      </div>
+                      <img src="/gumlet-logo.svg" alt="Gumlet" className="w-12 h-12 rounded-lg border-2 border-gray-200 object-contain bg-white p-1" />
                       <div>
                         <h3 className="text-sm font-bold">Software Engineer</h3>
                         <p className="text-xs">
@@ -210,9 +204,7 @@ const Experience = forwardRef<WindowRef, ExperienceProps>(
                   <div className="w-24 text-xs text-gray-400 pt-1">Jan 2020 - Feb 2022</div>
                   <div className="flex-1 space-y-3">
                     <div className="flex gap-4 items-start">
-                      <div className="w-12 h-12 bg-orange-600 rounded-lg border-2 border-gray-200 flex items-center justify-center text-white font-bold text-lg">
-                        AVO
-                      </div>
+                      <img src="/avo-logo.png" alt="Avo Automation" className="w-12 h-12 rounded-lg border-2 border-gray-200 object-contain bg-white p-1" />
                       <div>
                         <h3 className="text-sm font-bold">Senior Software Engineer</h3>
                         <p className="text-xs">
@@ -246,19 +238,17 @@ const Experience = forwardRef<WindowRef, ExperienceProps>(
                   <div className="w-24 text-xs text-gray-400 pt-1">Jan 2020 - Jun 2020</div>
                   <div className="flex-1 space-y-3">
                     <div className="flex gap-4 items-start">
-                      <div className="w-12 h-12 bg-red-600 rounded-lg border-2 border-gray-200 flex items-center justify-center text-white font-bold text-sm">
-                        SLK
-                      </div>
+                      <img src="/altimetrik-logo.svg" alt="Altimetrik" className="w-12 h-12 rounded-lg border-2 border-gray-200 object-contain bg-white p-1" />
                       <div>
                         <h3 className="text-sm font-bold">Trainee - Dimension labs</h3>
                         <p className="text-xs">
                           <a 
-                            href="https://slksoftware.com/" 
+                            href="https://www.altimetrik.com/" 
                             target="_blank" 
                             rel="noopener noreferrer"
                             className="text-blue-400 hover:underline"
                           >
-                            SLK
+                            SLK (now Altimetrik)
                           </a> · Internship
                         </p>
                         <p className="text-xs text-gray-400">6 mos</p>
