@@ -71,9 +71,7 @@ const Experience = forwardRef<WindowRef, ExperienceProps>(
                   <div className="w-24 text-xs text-gray-400 pt-1">Sep 2025 - Present</div>
                   <div className="flex-1 space-y-3">
                     <div className="flex gap-4 items-start">
-                      <div className="w-12 h-12 bg-indigo-600 rounded-lg border-2 border-gray-200 flex items-center justify-center text-white font-bold text-lg">
-                        B
-                      </div>
+                      <img src="/booked55-logo.png" alt="Booked55" className="w-12 h-12 rounded-lg border-2 border-gray-200 object-cover" />
                       <div>
                         <h3 className="text-sm font-bold">Co-Founder</h3>
                         <p className="text-xs">

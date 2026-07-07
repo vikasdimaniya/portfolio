@@ -311,9 +311,7 @@ export default function Home() {
           >
             <div className="glass-badge hover:scale-105 transition-transform duration-200 cursor-pointer">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">B</span>
-                </div>
+                <img src="/booked55-logo.png" alt="Booked55" className="w-8 h-8 rounded-full object-cover" />
                 <span className="text-white font-semibold">Booked55</span>
               </div>
             </div>
