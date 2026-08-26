@@ -5,6 +5,7 @@ on:
     tags:
       - 'prod'
       - 'prod-*'
+  workflow_dispatch:
 
 jobs:
   deploy:
